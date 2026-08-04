@@ -19,6 +19,7 @@ export type Zone = {
   headline: string;
   subheadline: string;
   basePricePerSqm: number;
+  heroImage: string;
 };
 
 export type PropertyExtras = {

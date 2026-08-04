@@ -101,12 +101,13 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
   const [contactData, setContactData] =
     useState<ContactData>(initialContactData);
   const [result, setResult] = useState<ValuationResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const totalSteps = 5;
   const progress = Math.round((step / totalSteps) * 100);
 
-  function goNext() {
+  async function goNext() {
     setError("");
 
     if (step === 1 && formData.squareMeters <= 0) {
@@ -135,17 +136,39 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
         return;
       }
 
-      try {
-        const calculatedResult = calculateValuation(formData);
-        setResult(calculatedResult);
-        setStep(5);
-      } catch (calculationError) {
-        setError(
-          calculationError instanceof Error
-            ? calculationError.message
-            : "No se ha podido calcular la valoración."
-        );
-      }
+     try {
+  setIsSubmitting(true);
+
+  const response = await fetch("/api/lead", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      valuation: formData,
+      contact: contactData,
+      sourceUrl:
+        typeof window !== "undefined" ? window.location.href : undefined,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.message || "No se ha podido enviar el lead.");
+  }
+
+  setResult(data.result);
+  setStep(5);
+} catch (submitError) {
+  setError(
+    submitError instanceof Error
+      ? submitError.message
+      : "No se ha podido calcular la valoración."
+  );
+} finally {
+  setIsSubmitting(false);
+}
 
       return;
     }
@@ -634,14 +657,19 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
         )}
 
         {step < 5 && (
-          <button
-            type="button"
-            onClick={goNext}
-            className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
-          >
-            {step === 4 ? "Ver mi estimación" : "Siguiente"}
-          </button>
-        )}
+  <button
+    type="button"
+    onClick={goNext}
+    disabled={isSubmitting}
+    className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    {isSubmitting
+      ? "Calculando..."
+      : step === 4
+        ? "Ver mi estimación"
+        : "Siguiente"}
+  </button>
+)}
 
         {step === 5 && (
           <button

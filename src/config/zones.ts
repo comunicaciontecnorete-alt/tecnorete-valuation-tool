@@ -9,6 +9,7 @@ export const zones: Zone[] = [
     subheadline:
       "Calcula una estimación orientativa del valor de tu vivienda en pocos pasos.",
     basePricePerSqm: 1350,
+    heroImage: "/images/zones/santa-maria-de-benquerencia.jpg",
   },
   {
     postalCode: "45004",
@@ -18,6 +19,7 @@ export const zones: Zone[] = [
     subheadline:
       "Obtén una primera referencia de valor antes de vender tu vivienda.",
     basePricePerSqm: 1700,
+    heroImage: "/images/zones/santa-teresa.jpg",
   },
   {
     postalCode: "45005",
@@ -27,6 +29,7 @@ export const zones: Zone[] = [
     subheadline:
       "Una estimación rápida y orientativa basada en la zona y las características del inmueble.",
     basePricePerSqm: 1450,
+    heroImage: "/images/zones/toledo-sur.jpg",
   },
   {
     postalCode: "45008",
@@ -36,6 +39,7 @@ export const zones: Zone[] = [
     subheadline:
       "Introduce los datos principales de tu vivienda y recibe un rango estimado.",
     basePricePerSqm: 1250,
+    heroImage: "/images/zones/azucaica.jpg",
   },
   {
     postalCode: "45161",
@@ -45,6 +49,7 @@ export const zones: Zone[] = [
     subheadline:
       "Calcula un rango aproximado de valoración antes de tomar una decisión.",
     basePricePerSqm: 900,
+    heroImage: "/images/zones/polan.jpg",
   },
   {
     postalCode: "45123",
@@ -54,6 +59,7 @@ export const zones: Zone[] = [
     subheadline:
       "Completa la calculadora y recibe una estimación orientativa al momento.",
     basePricePerSqm: 1000,
+    heroImage: "/images/zones/layos.jpg",
   },
   {
     postalCode: "45122",
@@ -63,6 +69,7 @@ export const zones: Zone[] = [
     subheadline:
       "Una primera estimación para saber en qué rango puede moverse tu vivienda.",
     basePricePerSqm: 1150,
+    heroImage: "/images/zones/arges.jpg",
   },
   {
     postalCode: "45190",
@@ -72,6 +79,7 @@ export const zones: Zone[] = [
     subheadline:
       "Conoce un rango orientativo de valor según zona, metros y características.",
     basePricePerSqm: 1050,
+    heroImage: "/images/zones/nambroca.jpg",
   },
 ];
 

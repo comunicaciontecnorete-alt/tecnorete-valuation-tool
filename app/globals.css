@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+input,
+select,
+textarea {
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+select option {
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+input[type="checkbox"] {
+  accent-color: #ec8a36;
+}
