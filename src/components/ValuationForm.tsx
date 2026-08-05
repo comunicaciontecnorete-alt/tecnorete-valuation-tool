@@ -625,9 +625,8 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
 
           {contactData.wantsToSell && (
             <div className="mt-5 rounded-2xl border border-[#ec8a36]/40 bg-[#ec8a36]/10 p-4 text-sm font-semibold text-slate-800">
-              Has indicado que quieres que te contacten para valorar la posible
-              venta. Este lead se marcará como prioritario cuando activemos el
-              envío por email.
+              Has indicado que quieres que te contacten para valorar la posible venta.
+              El equipo de Tecnorete recibirá tu solicitud con prioridad.
             </div>
           )}
 
