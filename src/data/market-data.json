@@ -7,17 +7,203 @@
       "from": "06/01/2026",
       "to": "25/06/2026"
     },
-    "importedAt": "2026-08-12T11:39:21.161Z"
+    "importedAt": "2026-08-12T12:14:55.362Z"
   },
   "apartments": {
     "pricePerUsefulSqm": 1816,
     "pricePerBuiltSqm": 1578,
-    "averageSalePrice": 120519
+    "averageSalePrice": 120519,
+    "elevator": {
+      "yes": {
+        "averageSalePrice": 155087,
+        "pricePerUsefulSqm": 2112,
+        "pricePerBuiltSqm": 1831
+      },
+      "no": {
+        "averageSalePrice": 104964,
+        "pricePerUsefulSqm": 1682,
+        "pricePerBuiltSqm": 1464
+      }
+    },
+    "bedrooms": {
+      "1": {
+        "averageSalePrice": 115630,
+        "pricePerUsefulSqm": 2269,
+        "pricePerBuiltSqm": 1794
+      },
+      "2": {
+        "averageSalePrice": 107965,
+        "pricePerUsefulSqm": 1963,
+        "pricePerBuiltSqm": 1750
+      },
+      "3": {
+        "averageSalePrice": 136599,
+        "pricePerUsefulSqm": 1700,
+        "pricePerBuiltSqm": 1486
+      },
+      "4": {
+        "averageSalePrice": 116667,
+        "pricePerUsefulSqm": 1196,
+        "pricePerBuiltSqm": 1013
+      }
+    },
+    "age": {
+      "under40Years": {
+        "averageSalePrice": 115735,
+        "pricePerUsefulSqm": 1665,
+        "pricePerBuiltSqm": 1418
+      },
+      "over40Years": {
+        "averageSalePrice": 122342,
+        "pricePerUsefulSqm": 1873,
+        "pricePerBuiltSqm": 1639
+      }
+    },
+    "usualRange": {
+      "averagePricePerUsefulSqm": 1816,
+      "salePriceMin": 91000,
+      "pricePerUsefulSqmMin": 1373,
+      "pricePerUsefulSqmMax": 2253,
+      "salePriceMax": 139900,
+      "averageSalePrice": 120519
+    }
   },
   "houses": {
     "pricePerUsefulSqm": 731,
     "pricePerBuiltSqm": 633,
-    "averageSalePrice": 88562
+    "averageSalePrice": 88562,
+    "size": {
+      "under70Sqm": {
+        "averageSalePrice": 33950,
+        "pricePerUsefulSqm": 548,
+        "pricePerBuiltSqm": 494
+      },
+      "over70Sqm": {
+        "averageSalePrice": 92931,
+        "pricePerUsefulSqm": 746,
+        "pricePerBuiltSqm": 644
+      }
+    },
+    "subtypes": {
+      "attached": {
+        "averageSalePrice": 77218,
+        "pricePerUsefulSqm": 615,
+        "pricePerBuiltSqm": 578
+      },
+      "detached": {
+        "averageSalePrice": 90180,
+        "pricePerUsefulSqm": 744,
+        "pricePerBuiltSqm": 638
+      },
+      "semiDetached": {
+        "averageSalePrice": 120538,
+        "pricePerUsefulSqm": 996,
+        "pricePerBuiltSqm": 828
+      },
+      "singleFamily": {
+        "averageSalePrice": 50950,
+        "pricePerUsefulSqm": 477,
+        "pricePerBuiltSqm": 370
+      }
+    },
+    "condition": {
+      "recentlyRenovated": {
+        "averageSalePrice": 94900,
+        "pricePerUsefulSqm": 703,
+        "pricePerBuiltSqm": 703
+      },
+      "renovated": {
+        "averageSalePrice": 115299,
+        "pricePerUsefulSqm": 1100,
+        "pricePerBuiltSqm": 986
+      },
+      "moveInReady": {
+        "averageSalePrice": 88079,
+        "pricePerUsefulSqm": 604,
+        "pricePerBuiltSqm": 513
+      },
+      "needsRenovation": {
+        "averageSalePrice": 88468,
+        "pricePerUsefulSqm": 526,
+        "pricePerBuiltSqm": 420
+      }
+    },
+    "age": {
+      "under40Years": {
+        "averageSalePrice": 128354,
+        "pricePerUsefulSqm": 839,
+        "pricePerBuiltSqm": 740
+      },
+      "over40Years": {
+        "averageSalePrice": 68666,
+        "pricePerUsefulSqm": 677,
+        "pricePerBuiltSqm": 579
+      }
+    },
+    "usualRange": {
+      "averagePricePerUsefulSqm": 731,
+      "salePriceMin": 46000,
+      "pricePerUsefulSqmMin": 431,
+      "pricePerUsefulSqmMax": 971,
+      "salePriceMax": 130000,
+      "averageSalePrice": 88562
+    }
+  },
+  "demand": {
+    "totalBuyers": 11484,
+    "apartments": {
+      "totalPotentialBuyers": 5732,
+      "byBedrooms": {
+        "1": 456,
+        "2": 1917,
+        "3": 2726,
+        "4": 633
+      },
+      "byPriceRange": {
+        "upTo100000": {
+          "1": 147,
+          "2": 341,
+          "3": 279,
+          "4": 10,
+          "total": 777
+        },
+        "from100000To150000": {
+          "1": 267,
+          "2": 885,
+          "3": 1202,
+          "4": 222,
+          "total": 2576
+        },
+        "from150000To200000": {
+          "1": 36,
+          "2": 521,
+          "3": 871,
+          "4": 215,
+          "total": 1643
+        },
+        "from200000To300000": {
+          "1": 5,
+          "2": 161,
+          "3": 340,
+          "4": 169,
+          "total": 675
+        },
+        "from300000To400000": {
+          "1": 0,
+          "2": 4,
+          "3": 32,
+          "4": 10,
+          "total": 46
+        },
+        "over400000": {
+          "1": 1,
+          "2": 5,
+          "3": 2,
+          "4": 7,
+          "total": 15
+        }
+      }
+    }
   },
   "market": {
     "averageDiscountPercent": 9,
