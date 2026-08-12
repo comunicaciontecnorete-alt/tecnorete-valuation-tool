@@ -1,0 +1,26 @@
+{
+  "source": {
+    "report": "Informe del mercado de la vivienda - compraventas",
+    "organization": "DAI - Grupo Tecnocasa",
+    "location": "Toledo",
+    "period": {
+      "from": "06/01/2026",
+      "to": "25/06/2026"
+    },
+    "importedAt": "2026-08-12T11:39:21.161Z"
+  },
+  "apartments": {
+    "pricePerUsefulSqm": 1816,
+    "pricePerBuiltSqm": 1578,
+    "averageSalePrice": 120519
+  },
+  "houses": {
+    "pricePerUsefulSqm": 731,
+    "pricePerBuiltSqm": 633,
+    "averageSalePrice": 88562
+  },
+  "market": {
+    "averageDiscountPercent": 9,
+    "overvaluationPercent": 21
+  }
+}

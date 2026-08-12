@@ -39,3 +39,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+data/market-report/current.pdf
+data/market-report/current.txt
