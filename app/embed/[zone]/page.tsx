@@ -2,6 +2,7 @@ import { ValuationForm } from "@/components/ValuationForm";
 import { notFound } from "next/navigation";
 import { getZoneBySlug, zones } from "@/config/zones";
 import { siteConfig } from "@/config/site";
+import type { Metadata } from "next";
 
 type EmbedPageProps = {
   params: Promise<{
@@ -15,23 +16,44 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: EmbedPageProps) {
+export async function generateMetadata({
+  params,
+}: EmbedPageProps): Promise<Metadata> {
   const { zone: zoneSlug } = await params;
   const zone = getZoneBySlug(zoneSlug);
 
   if (!zone) {
     return {
       title: "Zona no encontrada",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   return {
-    title: `${zone.headline} | ${siteConfig.name}`,
+    title: zone.headline,
     description: zone.subheadline,
+
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
+
+    alternates: {
+      canonical: `/valora-tu-vivienda/${zone.slug}`,
+    },
   };
 }
 
-export default async function EmbedZonePage({ params }: EmbedPageProps) {
+export default async function EmbedZonePage({
+  params,
+}: EmbedPageProps) {
   const { zone: zoneSlug } = await params;
   const zone = getZoneBySlug(zoneSlug);
 

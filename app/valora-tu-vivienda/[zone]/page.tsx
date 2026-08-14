@@ -2,6 +2,7 @@ import { ValuationForm } from "@/components/ValuationForm";
 import { notFound } from "next/navigation";
 import { getZoneBySlug, zones } from "@/config/zones";
 import { siteConfig } from "@/config/site";
+import type { Metadata } from "next";
 
 type ZonePageProps = {
   params: Promise<{
@@ -15,23 +16,51 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: ZonePageProps) {
+export async function generateMetadata({
+  params,
+}: ZonePageProps): Promise<Metadata> {
   const { zone: zoneSlug } = await params;
   const zone = getZoneBySlug(zoneSlug);
 
   if (!zone) {
     return {
       title: "Zona no encontrada",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const canonicalPath = `/valora-tu-vivienda/${zone.slug}`;
+
   return {
-    title: `${zone.headline} | ${siteConfig.name}`,
+    title: zone.headline,
     description: zone.subheadline,
+
+    alternates: {
+      canonical: canonicalPath,
+    },
+
+    openGraph: {
+      type: "website",
+      locale: "es_ES",
+      title: zone.headline,
+      description: zone.subheadline,
+      url: canonicalPath,
+      images: [
+        {
+          url: zone.heroImage,
+          alt: `Valoración de vivienda en ${zone.name}`,
+        },
+      ],
+    },
   };
 }
 
-export default async function ZoneValuationPage({ params }: ZonePageProps) {
+export default async function ZoneValuationPage({
+  params,
+}: ZonePageProps) {
   const { zone: zoneSlug } = await params;
   const zone = getZoneBySlug(zoneSlug);
 
