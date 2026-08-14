@@ -1,8 +1,13 @@
 import { ValuationForm } from "@/components/ValuationForm";
 import { notFound } from "next/navigation";
 import { getZoneBySlug, zones } from "@/config/zones";
+import { getZoneSeoContent } from "@/config/zoneSeoContent";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
+import { MarketReferenceSection } from "@/components/MarketReferenceSection";
+import { DemandInsightsSection } from "@/components/DemandInsightsSection";
+import { HowValuationWorksSection } from "@/components/HowValuationWorksSection";
+import { FinalValuationCta } from "@/components/FinalValuationCta";
 
 type ZonePageProps = {
   params: Promise<{
@@ -32,11 +37,15 @@ export async function generateMetadata({
     };
   }
 
+  const seoContent = getZoneSeoContent(zone.slug);
   const canonicalPath = `/valora-tu-vivienda/${zone.slug}`;
 
+  const title = seoContent?.seoTitle ?? zone.headline;
+  const description = seoContent?.seoDescription ?? zone.subheadline;
+
   return {
-    title: zone.headline,
-    description: zone.subheadline,
+    title,
+    description,
 
     alternates: {
       canonical: canonicalPath,
@@ -45,8 +54,8 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       locale: "es_ES",
-      title: zone.headline,
-      description: zone.subheadline,
+      title,
+      description,
       url: canonicalPath,
       images: [
         {
@@ -67,6 +76,8 @@ export default async function ZoneValuationPage({
   if (!zone) {
     notFound();
   }
+
+  const seoContent = getZoneSeoContent(zone.slug);
 
   return (
     <main className="min-h-screen bg-[#f6f8fb] px-5 py-8 md:px-8">
@@ -115,8 +126,83 @@ export default async function ZoneValuationPage({
           </div>
         </div>
 
-        <ValuationForm initialZoneSlug={zone.slug} />
-      </section>
+<div id="calculadora-valoracion">
+  <ValuationForm initialZoneSlug={zone.slug} />
+</div>      </section>
+
+      {seoContent && (
+        <div className="mx-auto mt-14 max-w-6xl space-y-8 pb-10 md:mt-20">
+          <section className="rounded-3xl bg-white p-6 shadow-sm md:p-10">
+            <h2 className="text-2xl font-bold tracking-tight text-[#033b79] md:text-3xl">
+              Valoración de vivienda en {zone.name}
+            </h2>
+
+            <p className="mt-5 max-w-4xl text-base leading-7 text-slate-600">
+              {seoContent.intro}
+            </p>
+          </section>
+
+          <section className="grid gap-8 lg:grid-cols-2">
+            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+              <h2 className="text-xl font-bold text-[#033b79] md:text-2xl">
+                El mercado de vivienda en {zone.name}
+              </h2>
+
+              <p className="mt-4 text-base leading-7 text-slate-600">
+                {seoContent.marketContext}
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+              <h2 className="text-xl font-bold text-[#033b79] md:text-2xl">
+                Tipos de vivienda en {zone.name}
+              </h2>
+
+              <p className="mt-4 text-base leading-7 text-slate-600">
+                {seoContent.propertyTypes}
+              </p>
+            </div>
+          </section>
+
+          <section className="rounded-3xl bg-white p-6 shadow-sm md:p-10">
+            <h2 className="text-2xl font-bold tracking-tight text-[#033b79]">
+              ¿Qué influye en el valor de una vivienda en {zone.name}?
+            </h2>
+
+            <p className="mt-4 max-w-4xl text-base leading-7 text-slate-600">
+              Para obtener una estimación más ajustada no utilizamos únicamente
+              la superficie del inmueble. La calculadora tiene en cuenta
+              diferentes características que pueden modificar su valoración.
+            </p>
+
+            <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+              {seoContent.valuationFactors.map((factor) => (
+                <li
+                  key={factor}
+                  className="flex items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-700"
+                >
+                  <span
+                    className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#ec8a36]"
+                    aria-hidden="true"
+                  />
+
+                  <span>{factor}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+<MarketReferenceSection />
+<DemandInsightsSection />
+<HowValuationWorksSection />
+
+
+          <FinalValuationCta
+  zoneName={zone.name}
+  title={seoContent.ctaTitle}
+  text={seoContent.ctaText}
+/>
+        </div>
+      )}
     </main>
   );
 }
