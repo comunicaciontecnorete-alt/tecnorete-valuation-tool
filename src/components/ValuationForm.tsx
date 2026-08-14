@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+
 import { siteConfig } from "@/config/site";
+
 import type {
   ConstructionPeriod,
   FloorType,
+  HouseSubtype,
   PropertyCondition,
   PropertyType,
   ValuationInput,
@@ -25,7 +28,10 @@ type ContactData = {
   wantsToSell: boolean;
 };
 
-const propertyTypeOptions: { value: PropertyType; label: string }[] = [
+const propertyTypeOptions: {
+  value: PropertyType;
+  label: string;
+}[] = [
   { value: "piso", label: "Piso" },
   { value: "atico", label: "Ático" },
   { value: "duplex", label: "Dúplex" },
@@ -33,13 +39,45 @@ const propertyTypeOptions: { value: PropertyType; label: string }[] = [
   { value: "chalet", label: "Chalet" },
 ];
 
-const conditionOptions: { value: PropertyCondition; label: string }[] = [
+const houseSubtypeOptions: {
+  value: HouseSubtype;
+  label: string;
+}[] = [
+  {
+    value: "unknown",
+    label: "No lo sé",
+  },
+  {
+    value: "attached",
+    label: "Adosada",
+  },
+  {
+    value: "semiDetached",
+    label: "Pareada",
+  },
+  {
+    value: "detached",
+    label: "Independiente",
+  },
+  {
+    value: "singleFamily",
+    label: "Unifamiliar / otra",
+  },
+];
+
+const conditionOptions: {
+  value: PropertyCondition;
+  label: string;
+}[] = [
   { value: "a-reformar", label: "A reformar" },
   { value: "buen-estado", label: "Buen estado" },
   { value: "reformado", label: "Reformado" },
 ];
 
-const floorOptions: { value: FloorType; label: string }[] = [
+const floorOptions: {
+  value: FloorType;
+  label: string;
+}[] = [
   { value: "bajo", label: "Bajo" },
   { value: "primera", label: "Primera planta" },
   { value: "intermedia", label: "Planta intermedia" },
@@ -62,6 +100,7 @@ const constructionPeriodOptions: {
 const initialFormData: ValuationInput = {
   zoneSlug: "",
   propertyType: "piso",
+  houseSubtype: "unknown",
   squareMeters: 90,
   bedrooms: 3,
   bathrooms: 1,
@@ -92,27 +131,48 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
+export function ValuationForm({
+  initialZoneSlug,
+}: ValuationFormProps) {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<ValuationInput>({
-    ...initialFormData,
-    zoneSlug: initialZoneSlug,
-  });
+
+  const [formData, setFormData] =
+    useState<ValuationInput>({
+      ...initialFormData,
+      zoneSlug: initialZoneSlug,
+    });
+
   const [contactData, setContactData] =
     useState<ContactData>(initialContactData);
+
   const [result, setResult] =
-  useState<HybridValuationResult | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    useState<HybridValuationResult | null>(null);
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
   const [error, setError] = useState("");
 
   const totalSteps = 5;
-  const progress = Math.round((step / totalSteps) * 100);
+  const progress = Math.round(
+    (step / totalSteps) * 100
+  );
+
+  const isApartmentFamily =
+    formData.propertyType === "piso" ||
+    formData.propertyType === "atico" ||
+    formData.propertyType === "duplex";
 
   async function goNext() {
     setError("");
 
-    if (step === 1 && formData.squareMeters <= 0) {
-      setError("Indica los metros cuadrados construidos de la vivienda.");
+    if (
+      step === 1 &&
+      formData.squareMeters <= 0
+    ) {
+      setError(
+        "Indica los metros cuadrados construidos de la vivienda."
+      );
       return;
     }
 
@@ -133,67 +193,91 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
       }
 
       if (!contactData.consent) {
-        setError(siteConfig.legal.requiredConsentError);
+        setError(
+          siteConfig.legal.requiredConsentError
+        );
         return;
       }
 
-     try {
-  setIsSubmitting(true);
+      try {
+        setIsSubmitting(true);
 
-  const response = await fetch("/api/lead", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      valuation: formData,
-      contact: contactData,
-      sourceUrl:
-        typeof window !== "undefined" ? window.location.href : undefined,
-    }),
-  });
+        const response = await fetch(
+          "/api/lead",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              valuation: formData,
+              contact: contactData,
+              sourceUrl:
+                typeof window !== "undefined"
+                  ? window.location.href
+                  : undefined,
+            }),
+          }
+        );
 
-  const data = await response.json();
+        const data = await response.json();
 
-  if (!response.ok || !data.ok) {
-    throw new Error(data.message || "No se ha podido enviar el lead.");
-  }
+        if (!response.ok || !data.ok) {
+          throw new Error(
+            data.message ||
+              "No se ha podido enviar el lead."
+          );
+        }
 
-  setResult(data.result);
-  setStep(5);
-} catch (submitError) {
-  setError(
-    submitError instanceof Error
-      ? submitError.message
-      : "No se ha podido calcular la valoración."
-  );
-} finally {
-  setIsSubmitting(false);
-}
+        setResult(data.result);
+        setStep(5);
+      } catch (submitError) {
+        setError(
+          submitError instanceof Error
+            ? submitError.message
+            : "No se ha podido calcular la valoración."
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
 
       return;
     }
 
-    setStep((currentStep) => Math.min(currentStep + 1, totalSteps));
+    setStep((currentStep) =>
+      Math.min(
+        currentStep + 1,
+        totalSteps
+      )
+    );
   }
 
   function goBack() {
     setError("");
-    setStep((currentStep) => Math.max(currentStep - 1, 1));
+
+    setStep((currentStep) =>
+      Math.max(currentStep - 1, 1)
+    );
   }
 
   return (
     <div className="rounded-3xl bg-white p-5 shadow-sm md:p-8">
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
-          <span>Paso {step} de {totalSteps}</span>
+          <span>
+            Paso {step} de {totalSteps}
+          </span>
+
           <span>{progress}%</span>
         </div>
 
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
           <div
             className="h-full rounded-full bg-[#ec8a36] transition-all"
-            style={{ width: `${progress}%` }}
+            style={{
+              width: `${progress}%`,
+            }}
           />
         </div>
       </div>
@@ -215,22 +299,84 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               </label>
 
               <select
-                value={formData.propertyType}
-                onChange={(event) =>
+                value={
+                  formData.propertyType
+                }
+                onChange={(event) => {
+                  const propertyType =
+                    event.target
+                      .value as PropertyType;
+
                   setFormData({
                     ...formData,
-                    propertyType: event.target.value as PropertyType,
-                  })
-                }
+                    propertyType,
+                    houseSubtype:
+                      propertyType ===
+                        "casa" ||
+                      propertyType ===
+                        "chalet"
+                        ? formData.houseSubtype ??
+                          "unknown"
+                        : "unknown",
+                  });
+                }}
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
               >
-                {propertyTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                {propertyTypeOptions.map(
+                  (option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  )
+                )}
               </select>
             </div>
+
+            {(formData.propertyType ===
+              "casa" ||
+              formData.propertyType ===
+                "chalet") && (
+              <div>
+                <label className="text-sm font-semibold text-slate-700">
+                  ¿Qué tipo de casa es?
+                </label>
+
+                <select
+                  value={
+                    formData.houseSubtype ??
+                    "unknown"
+                  }
+                  onChange={(event) =>
+                    setFormData({
+                      ...formData,
+                      houseSubtype:
+                        event.target
+                          .value as HouseSubtype,
+                    })
+                  }
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
+                >
+                  {houseSubtypeOptions.map(
+                    (option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </option>
+                    )
+                  )}
+                </select>
+
+                <p className="mt-2 text-xs leading-5 text-slate-500">
+                  Si no estás seguro,
+                  selecciona “No lo sé”.
+                </p>
+              </div>
+            )}
 
             <div>
               <label className="text-sm font-semibold text-slate-700">
@@ -240,11 +386,15 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               <input
                 type="number"
                 min="1"
-                value={formData.squareMeters}
+                value={
+                  formData.squareMeters
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
-                    squareMeters: Number(event.target.value),
+                    squareMeters: Number(
+                      event.target.value
+                    ),
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
@@ -273,11 +423,15 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               <input
                 type="number"
                 min="0"
-                value={formData.bedrooms}
+                value={
+                  formData.bedrooms
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
-                    bedrooms: Number(event.target.value),
+                    bedrooms: Number(
+                      event.target.value
+                    ),
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
@@ -292,75 +446,96 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               <input
                 type="number"
                 min="0"
-                value={formData.bathrooms}
+                value={
+                  formData.bathrooms
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
-                    bathrooms: Number(event.target.value),
+                    bathrooms: Number(
+                      event.target.value
+                    ),
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
               />
             </div>
 
-            <div>
-              <label className="text-sm font-semibold text-slate-700">
-                Planta
-              </label>
+            {isApartmentFamily && (
+              <>
+                <div>
+                  <label className="text-sm font-semibold text-slate-700">
+                    Planta
+                  </label>
 
-              <select
-                value={formData.floor}
-                onChange={(event) =>
-                  setFormData({
-                    ...formData,
-                    floor: event.target.value as FloorType,
-                  })
-                }
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
-              >
-                {floorOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+                  <select
+                    value={formData.floor}
+                    onChange={(event) =>
+                      setFormData({
+                        ...formData,
+                        floor:
+                          event.target
+                            .value as FloorType,
+                      })
+                    }
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
+                  >
+                    {floorOptions.map(
+                      (option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
 
-            <div>
-              <label className="text-sm font-semibold text-slate-700">
-                ¿Tiene ascensor?
-              </label>
+                <div>
+                  <label className="text-sm font-semibold text-slate-700">
+                    ¿Tiene ascensor?
+                  </label>
 
-              <div className="mt-2 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFormData({ ...formData, hasElevator: true })
-                  }
-                  className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
-                    formData.hasElevator
-                      ? "border-[#033b79] bg-[#033b79] text-white"
-                      : "border-slate-200 bg-white text-slate-700"
-                  }`}
-                >
-                  Sí
-                </button>
+                  <div className="mt-2 grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          hasElevator: true,
+                        })
+                      }
+                      className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
+                        formData.hasElevator
+                          ? "border-[#033b79] bg-[#033b79] text-white"
+                          : "border-slate-200 bg-white text-slate-700"
+                      }`}
+                    >
+                      Sí
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFormData({ ...formData, hasElevator: false })
-                  }
-                  className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
-                    !formData.hasElevator
-                      ? "border-[#033b79] bg-[#033b79] text-white"
-                      : "border-slate-200 bg-white text-slate-700"
-                  }`}
-                >
-                  No
-                </button>
-              </div>
-            </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          hasElevator: false,
+                        })
+                      }
+                      className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
+                        !formData.hasElevator
+                          ? "border-[#033b79] bg-[#033b79] text-white"
+                          : "border-slate-200 bg-white text-slate-700"
+                      }`}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </section>
       )}
@@ -382,20 +557,29 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               </label>
 
               <select
-                value={formData.condition}
+                value={
+                  formData.condition
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
-                    condition: event.target.value as PropertyCondition,
+                    condition:
+                      event.target
+                        .value as PropertyCondition,
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
               >
-                {conditionOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                {conditionOptions.map(
+                  (option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
@@ -405,21 +589,29 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               </label>
 
               <select
-                value={formData.constructionPeriod}
+                value={
+                  formData.constructionPeriod
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
-                    constructionPeriod: event.target
-                      .value as ConstructionPeriod,
+                    constructionPeriod:
+                      event.target
+                        .value as ConstructionPeriod,
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
               >
-                {constructionPeriodOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                {constructionPeriodOptions.map(
+                  (option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
@@ -432,13 +624,17 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
                 <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
                   <input
                     type="checkbox"
-                    checked={formData.extras.garage}
+                    checked={
+                      formData.extras.garage
+                    }
                     onChange={(event) =>
                       setFormData({
                         ...formData,
                         extras: {
                           ...formData.extras,
-                          garage: event.target.checked,
+                          garage:
+                            event.target
+                              .checked,
                         },
                       })
                     }
@@ -449,13 +645,18 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
                 <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
                   <input
                     type="checkbox"
-                    checked={formData.extras.terrace}
+                    checked={
+                      formData.extras
+                        .terrace
+                    }
                     onChange={(event) =>
                       setFormData({
                         ...formData,
                         extras: {
                           ...formData.extras,
-                          terrace: event.target.checked,
+                          terrace:
+                            event.target
+                              .checked,
                         },
                       })
                     }
@@ -466,13 +667,18 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
                 <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
                   <input
                     type="checkbox"
-                    checked={formData.extras.storage}
+                    checked={
+                      formData.extras
+                        .storage
+                    }
                     onChange={(event) =>
                       setFormData({
                         ...formData,
                         extras: {
                           ...formData.extras,
-                          storage: event.target.checked,
+                          storage:
+                            event.target
+                              .checked,
                         },
                       })
                     }
@@ -496,7 +702,10 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
           </h2>
 
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            {siteConfig.legal.shortNotice}
+            {
+              siteConfig.legal
+                .shortNotice
+            }
           </p>
 
           <div className="mt-6 space-y-5">
@@ -507,11 +716,14 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
 
               <input
                 type="text"
-                value={contactData.name}
+                value={
+                  contactData.name
+                }
                 onChange={(event) =>
                   setContactData({
                     ...contactData,
-                    name: event.target.value,
+                    name:
+                      event.target.value,
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
@@ -525,11 +737,14 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
 
               <input
                 type="tel"
-                value={contactData.phone}
+                value={
+                  contactData.phone
+                }
                 onChange={(event) =>
                   setContactData({
                     ...contactData,
-                    phone: event.target.value,
+                    phone:
+                      event.target.value,
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
@@ -543,11 +758,14 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
 
               <input
                 type="email"
-                value={contactData.email}
+                value={
+                  contactData.email
+                }
                 onChange={(event) =>
                   setContactData({
                     ...contactData,
-                    email: event.target.value,
+                    email:
+                      event.target.value,
                   })
                 }
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
@@ -557,20 +775,29 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
             <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 text-sm leading-6 text-slate-700">
               <input
                 type="checkbox"
-                checked={contactData.consent}
+                checked={
+                  contactData.consent
+                }
                 onChange={(event) =>
                   setContactData({
                     ...contactData,
-                    consent: event.target.checked,
+                    consent:
+                      event.target
+                        .checked,
                   })
                 }
                 className="mt-1"
               />
 
               <span>
-                {siteConfig.legal.checkboxText}{" "}
+                {
+                  siteConfig.legal
+                    .checkboxText
+                }{" "}
                 <Link
-                  href={siteConfig.privacyPath}
+                  href={
+                    siteConfig.privacyPath
+                  }
                   target="_blank"
                   className="font-semibold text-[#033b79] underline"
                 >
@@ -582,17 +809,26 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
             <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#ec8a36]/40 bg-[#ec8a36]/5 p-4 text-sm font-semibold leading-6 text-slate-800">
               <input
                 type="checkbox"
-                checked={contactData.wantsToSell}
+                checked={
+                  contactData.wantsToSell
+                }
                 onChange={(event) =>
                   setContactData({
                     ...contactData,
-                    wantsToSell: event.target.checked,
+                    wantsToSell:
+                      event.target
+                        .checked,
                   })
                 }
                 className="mt-1"
               />
 
-              <span>{siteConfig.legal.priorityCheckboxText}</span>
+              <span>
+                {
+                  siteConfig.legal
+                    .priorityCheckboxText
+                }
+              </span>
             </label>
           </div>
         </section>
@@ -610,64 +846,104 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
 
           <div className="mt-6 rounded-3xl bg-[#033b79] p-6 text-white">
             <p className="text-sm opacity-80">
-              {result.zoneName} · CP {result.postalCode}
+              {result.zoneName} · CP{" "}
+              {result.postalCode}
             </p>
 
             <p className="mt-3 text-4xl font-bold">
-              {formatCurrency(result.minPrice)} - {formatCurrency(result.maxPrice)}
+              {formatCurrency(
+                result.minPrice
+              )}{" "}
+              -{" "}
+              {formatCurrency(
+                result.maxPrice
+              )}
             </p>
 
             <p className="mt-4 text-sm leading-6 opacity-85">
-              Esta cifra es una referencia inicial. Para ajustar el valor real
-              es necesario revisar la vivienda, su ubicación exacta, estado,
-              demanda y comparables reales de mercado.
+              Esta cifra es una
+              referencia inicial. Para
+              ajustar el valor real es
+              necesario revisar la
+              vivienda, su ubicación
+              exacta, estado, demanda y
+              comparables reales de
+              mercado.
             </p>
           </div>
-          {result.valuationEngine === "v2-apartment" && (
-  <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-    <p className="text-xs font-bold uppercase tracking-wide text-[#ec8a36]">
-      Demanda en este segmento
-    </p>
 
-    <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <p className="text-2xl font-bold text-[#033b79]">
-          {result.demandLabel}
-        </p>
+          {result.valuationEngine ===
+            "v2-apartment" && (
+            <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-[#ec8a36]">
+                Demanda en este
+                segmento
+              </p>
 
-        <p className="mt-1 text-sm text-slate-600">
-          {result.demand.buyers.toLocaleString("es-ES")} potenciales compradores
-        </p>
-      </div>
+              <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-2xl font-bold text-[#033b79]">
+                    {
+                      result.demandLabel
+                    }
+                  </p>
 
-      <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm">
-        {result.demand.bedrooms === 4
-          ? "4 o más habitaciones"
-          : `${result.demand.bedrooms} ${
-              result.demand.bedrooms === 1
-                ? "habitación"
-                : "habitaciones"
-            }`}
-      </div>
-    </div>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {result.demand.buyers.toLocaleString(
+                      "es-ES"
+                    )}{" "}
+                    potenciales
+                    compradores
+                  </p>
+                </div>
 
-    <p className="mt-4 text-xs leading-5 text-slate-500">
-      Según los datos de demanda del informe de mercado utilizado para esta
-      estimación. Es un indicador orientativo del interés registrado en
-      viviendas de características y rango de precio similares.
-    </p>
-  </div>
-)}
+                <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm">
+                  {result.demand
+                    .bedrooms === 4
+                    ? "4 o más habitaciones"
+                    : `${
+                        result.demand
+                          .bedrooms
+                      } ${
+                        result.demand
+                          .bedrooms ===
+                        1
+                          ? "habitación"
+                          : "habitaciones"
+                      }`}
+                </div>
+              </div>
+
+              <p className="mt-4 text-xs leading-5 text-slate-500">
+                Según los datos de
+                demanda del informe de
+                mercado utilizado para
+                esta estimación. Es un
+                indicador orientativo del
+                interés registrado en
+                viviendas de
+                características y rango
+                de precio similares.
+              </p>
+            </div>
+          )}
 
           {contactData.wantsToSell && (
             <div className="mt-5 rounded-2xl border border-[#ec8a36]/40 bg-[#ec8a36]/10 p-4 text-sm font-semibold text-slate-800">
-              Has indicado que quieres que te contacten para valorar la posible venta.
-              El equipo de Tecnorete recibirá tu solicitud con prioridad.
+              Has indicado que quieres
+              que te contacten para
+              valorar la posible venta.
+              El equipo de Tecnorete
+              recibirá tu solicitud con
+              prioridad.
             </div>
           )}
 
           <p className="mt-5 text-xs leading-5 text-slate-500">
-            {siteConfig.legal.resultDisclaimer}
+            {
+              siteConfig.legal
+                .resultDisclaimer
+            }
           </p>
         </section>
       )}
@@ -679,7 +955,8 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
       )}
 
       <div className="mt-8 flex items-center justify-between gap-3">
-        {step > 1 && step < 5 ? (
+        {step > 1 &&
+        step < 5 ? (
           <button
             type="button"
             onClick={goBack}
@@ -692,19 +969,21 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
         )}
 
         {step < 5 && (
-  <button
-    type="button"
-    onClick={goNext}
-    disabled={isSubmitting}
-    className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-  >
-    {isSubmitting
-      ? "Calculando..."
-      : step === 4
-        ? "Ver mi estimación"
-        : "Siguiente"}
-  </button>
-)}
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={
+              isSubmitting
+            }
+            className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting
+              ? "Calculando..."
+              : step === 4
+                ? "Ver mi estimación"
+                : "Siguiente"}
+          </button>
+        )}
 
         {step === 5 && (
           <button
@@ -713,10 +992,13 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               setStep(1);
               setResult(null);
               setError("");
-              setContactData(initialContactData);
+              setContactData(
+                initialContactData
+              );
               setFormData({
                 ...initialFormData,
-                zoneSlug: initialZoneSlug,
+                zoneSlug:
+                  initialZoneSlug,
               });
             }}
             className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"

@@ -1,8 +1,12 @@
-import { calculateValuation } from "@/lib/calculateValuation";
 import {
   calculateValuationV2,
   type ValuationResultV2,
 } from "@/lib/calculateValuationV2";
+
+import {
+  calculateHouseValuationV2,
+  type HouseValuationResultV2,
+} from "@/lib/calculateHouseValuationV2";
 
 import {
   getApartmentDemand,
@@ -13,7 +17,6 @@ import {
 import type {
   PropertyType,
   ValuationInput,
-  ValuationResult,
 } from "@/types/valuation";
 
 export type ApartmentHybridValuationResult =
@@ -24,8 +27,7 @@ export type ApartmentHybridValuationResult =
   };
 
 export type HouseHybridValuationResult =
-  ValuationResult & {
-    valuationEngine: "v1-house";
+  HouseValuationResultV2 & {
     demand: null;
     demandLabel: null;
   };
@@ -65,11 +67,13 @@ export function calculateValuationHybrid(
     };
   }
 
-  const valuation = calculateValuation(input);
+  const valuation = calculateHouseValuationV2(
+    input,
+    input.houseSubtype ?? "unknown"
+  );
 
   return {
     ...valuation,
-    valuationEngine: "v1-house",
     demand: null,
     demandLabel: null,
   };

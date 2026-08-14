@@ -105,15 +105,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * SISTEMA HÍBRIDO
-     *
-     * piso / ático / dúplex
-     * → V2 basada en informe dinámico
-     *
-     * casa / chalet
-     * → V1 protegida temporalmente
-     */
+   /*
+ * SISTEMA HÍBRIDO
+ *
+ * piso / ático / dúplex
+ * → V2 basada en informe dinámico
+ *
+ * casa / chalet
+ * → V2 específica de casas
+ */
     const result = calculateValuationHybrid(valuation);
 
     const lead = {
@@ -198,19 +198,32 @@ export async function POST(request: NextRequest) {
         `;
 
     const valuationEngineHtml =
-      result.valuationEngine === "v2-apartment"
-        ? `
-          <p>
-            <strong>Motor de valoración:</strong>
-            Mercado dinámico de pisos
-          </p>
-        `
-        : `
-          <p>
-            <strong>Motor de valoración:</strong>
-            Modelo provisional de casas
-          </p>
-        `;
+  result.valuationEngine === "v2-apartment"
+    ? `
+      <p>
+        <strong>Motor de valoración:</strong>
+        Mercado dinámico de pisos
+      </p>
+    `
+    : `
+      <p>
+        <strong>Motor de valoración:</strong>
+        Mercado dinámico de casas
+      </p>
+    `;
+
+const houseSubtypeLabel =
+  valuation.houseSubtype === "attached"
+    ? "Adosada"
+    : valuation.houseSubtype === "detached"
+      ? "Independiente"
+      : valuation.houseSubtype === "semiDetached"
+        ? "Pareada"
+        : valuation.houseSubtype === "singleFamily"
+          ? "Unifamiliar"
+          : valuation.houseSubtype === "unknown"
+            ? "No especificado"
+            : null;
 
     const html = `
       <div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.5;">
@@ -275,6 +288,16 @@ export async function POST(request: NextRequest) {
           <strong>Tipo:</strong>
           ${valuation.propertyType}
         </p>
+        ${
+  houseSubtypeLabel
+    ? `
+      <p>
+        <strong>Subtipo de casa:</strong>
+        ${houseSubtypeLabel}
+      </p>
+    `
+    : ""
+}
 
         <p>
           <strong>Metros:</strong>
@@ -291,15 +314,23 @@ export async function POST(request: NextRequest) {
           ${valuation.bathrooms}
         </p>
 
-        <p>
-          <strong>Planta:</strong>
-          ${valuation.floor}
-        </p>
+        ${
+  valuation.propertyType === "piso" ||
+  valuation.propertyType === "atico" ||
+  valuation.propertyType === "duplex"
+    ? `
+      <p>
+        <strong>Planta:</strong>
+        ${valuation.floor}
+      </p>
 
-        <p>
-          <strong>Ascensor:</strong>
-          ${yesNo(valuation.hasElevator)}
-        </p>
+      <p>
+        <strong>Ascensor:</strong>
+        ${yesNo(valuation.hasElevator)}
+      </p>
+    `
+    : ""
+}
 
         <p>
           <strong>Estado:</strong>

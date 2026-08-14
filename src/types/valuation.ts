@@ -1,4 +1,10 @@
 export type PropertyType = "piso" | "atico" | "duplex" | "casa" | "chalet";
+export type HouseSubtype =
+  | "attached"
+  | "detached"
+  | "semiDetached"
+  | "singleFamily"
+  | "unknown";
 
 export type PropertyCondition = "a-reformar" | "buen-estado" | "reformado";
 
@@ -39,6 +45,7 @@ export type ValuationInput = {
   condition: PropertyCondition;
   constructionPeriod: ConstructionPeriod;
   extras: PropertyExtras;
+  houseSubtype?: HouseSubtype;
 };
 
 export type AppliedCoefficient = {
