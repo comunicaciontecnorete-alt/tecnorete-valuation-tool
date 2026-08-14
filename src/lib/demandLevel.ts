@@ -66,33 +66,25 @@ function normalizeBedrooms(
 
 function calculateDemandLevel(
   buyers: number,
-  allSegmentValues: number[]
+  totalPotentialBuyers: number
 ): DemandLevel {
-  const sorted = [...allSegmentValues].sort(
-    (a, b) => a - b
-  );
-
-  const percentile = (position: number) => {
-    const index = Math.floor(
-      (sorted.length - 1) * position
+  if (totalPotentialBuyers <= 0) {
+    throw new Error(
+      "El total de compradores potenciales debe ser mayor que 0."
     );
+  }
 
-    return sorted[index];
-  };
+  const share = buyers / totalPotentialBuyers;
 
-  const q1 = percentile(0.25);
-  const q2 = percentile(0.5);
-  const q3 = percentile(0.75);
-
-  if (buyers <= q1) {
+  if (share < 0.005) {
     return "low";
   }
 
-  if (buyers <= q2) {
+  if (share < 0.02) {
     return "medium";
   }
 
-  if (buyers <= q3) {
+  if (share < 0.05) {
     return "high";
   }
 
@@ -117,25 +109,10 @@ export function getApartmentDemand(
   const buyers =
     demand.byPriceRange[priceRange][bedrooms];
 
-  const ranges = Object.values(
-    demand.byPriceRange
-  );
-
-  const allSegmentValues: number[] = [];
-
-  for (const range of ranges) {
-    allSegmentValues.push(
-      range[1],
-      range[2],
-      range[3],
-      range[4]
-    );
-  }
-
-  const level = calculateDemandLevel(
-    buyers,
-    allSegmentValues
-  );
+ const level = calculateDemandLevel(
+  buyers,
+  demand.totalPotentialBuyers
+);
 
   const shareOfApartmentDemand =
     buyers / demand.totalPotentialBuyers;
