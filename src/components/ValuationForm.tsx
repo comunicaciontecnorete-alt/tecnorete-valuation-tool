@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { calculateValuation } from "@/lib/calculateValuation";
 import { siteConfig } from "@/config/site";
 import type {
   ConstructionPeriod,
@@ -10,8 +9,9 @@ import type {
   PropertyCondition,
   PropertyType,
   ValuationInput,
-  ValuationResult,
 } from "@/types/valuation";
+
+import type { HybridValuationResult } from "@/lib/calculateValuationHybrid";
 
 type ValuationFormProps = {
   initialZoneSlug: string;
@@ -100,7 +100,8 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
   });
   const [contactData, setContactData] =
     useState<ContactData>(initialContactData);
-  const [result, setResult] = useState<ValuationResult | null>(null);
+  const [result, setResult] =
+  useState<HybridValuationResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -622,6 +623,41 @@ export function ValuationForm({ initialZoneSlug }: ValuationFormProps) {
               demanda y comparables reales de mercado.
             </p>
           </div>
+          {result.valuationEngine === "v2-apartment" && (
+  <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+    <p className="text-xs font-bold uppercase tracking-wide text-[#ec8a36]">
+      Demanda en este segmento
+    </p>
+
+    <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p className="text-2xl font-bold text-[#033b79]">
+          {result.demandLabel}
+        </p>
+
+        <p className="mt-1 text-sm text-slate-600">
+          {result.demand.buyers.toLocaleString("es-ES")} potenciales compradores
+        </p>
+      </div>
+
+      <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm">
+        {result.demand.bedrooms === 4
+          ? "4 o más habitaciones"
+          : `${result.demand.bedrooms} ${
+              result.demand.bedrooms === 1
+                ? "habitación"
+                : "habitaciones"
+            }`}
+      </div>
+    </div>
+
+    <p className="mt-4 text-xs leading-5 text-slate-500">
+      Según los datos de demanda del informe de mercado utilizado para esta
+      estimación. Es un indicador orientativo del interés registrado en
+      viviendas de características y rango de precio similares.
+    </p>
+  </div>
+)}
 
           {contactData.wantsToSell && (
             <div className="mt-5 rounded-2xl border border-[#ec8a36]/40 bg-[#ec8a36]/10 p-4 text-sm font-semibold text-slate-800">

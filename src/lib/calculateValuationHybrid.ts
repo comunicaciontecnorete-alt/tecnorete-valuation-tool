@@ -1,5 +1,14 @@
 import { calculateValuation } from "@/lib/calculateValuation";
-import { calculateValuationV2 } from "@/lib/calculateValuationV2";
+import {
+  calculateValuationV2,
+  type ValuationResultV2,
+} from "@/lib/calculateValuationV2";
+
+import {
+  getApartmentDemand,
+  getDemandLevelLabel,
+  type DemandResult,
+} from "@/lib/demandLevel";
 
 import type {
   PropertyType,
@@ -7,9 +16,27 @@ import type {
   ValuationResult,
 } from "@/types/valuation";
 
-type HybridValuationResult = ValuationResult;
+export type ApartmentHybridValuationResult =
+  ValuationResultV2 & {
+    valuationEngine: "v2-apartment";
+    demand: DemandResult;
+    demandLabel: string;
+  };
 
-function isApartmentFamily(propertyType: PropertyType) {
+export type HouseHybridValuationResult =
+  ValuationResult & {
+    valuationEngine: "v1-house";
+    demand: null;
+    demandLabel: null;
+  };
+
+export type HybridValuationResult =
+  | ApartmentHybridValuationResult
+  | HouseHybridValuationResult;
+
+function isApartmentFamily(
+  propertyType: PropertyType
+): propertyType is "piso" | "atico" | "duplex" {
   return (
     propertyType === "piso" ||
     propertyType === "atico" ||
@@ -21,8 +48,29 @@ export function calculateValuationHybrid(
   input: ValuationInput
 ): HybridValuationResult {
   if (isApartmentFamily(input.propertyType)) {
-    return calculateValuationV2(input);
+    const valuation = calculateValuationV2(input);
+
+    const demand = getApartmentDemand(
+      input.bedrooms,
+      valuation.adjustedPrice
+    );
+
+    return {
+      ...valuation,
+      valuationEngine: "v2-apartment",
+      demand,
+      demandLabel: getDemandLevelLabel(
+        demand.level
+      ),
+    };
   }
 
-  return calculateValuation(input);
+  const valuation = calculateValuation(input);
+
+  return {
+    ...valuation,
+    valuationEngine: "v1-house",
+    demand: null,
+    demandLabel: null,
+  };
 }
