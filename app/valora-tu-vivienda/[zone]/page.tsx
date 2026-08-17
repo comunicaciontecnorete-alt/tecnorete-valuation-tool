@@ -8,6 +8,7 @@ import { MarketReferenceSection } from "@/components/MarketReferenceSection";
 import { DemandInsightsSection } from "@/components/DemandInsightsSection";
 import { HowValuationWorksSection } from "@/components/HowValuationWorksSection";
 import { FinalValuationCta } from "@/components/FinalValuationCta";
+import { OtherZonesSection } from "@/components/OtherZonesSection";
 
 type ZonePageProps = {
   params: Promise<{
@@ -194,7 +195,7 @@ export default async function ZoneValuationPage({
 <MarketReferenceSection />
 <DemandInsightsSection />
 <HowValuationWorksSection />
-
+<OtherZonesSection currentZoneSlug={zone.slug} />
 
           <FinalValuationCta
   zoneName={zone.name}
