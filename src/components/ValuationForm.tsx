@@ -986,26 +986,35 @@ export function ValuationForm({
         )}
 
         {step === 5 && (
-          <button
-            type="button"
-            onClick={() => {
-              setStep(1);
-              setResult(null);
-              setError("");
-              setContactData(
-                initialContactData
-              );
-              setFormData({
-                ...initialFormData,
-                zoneSlug:
-                  initialZoneSlug,
-              });
-            }}
-            className="ml-auto rounded-full bg-[#ec8a36] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
-          >
-            Calcular otra vivienda
-          </button>
-        )}
+  <div className="ml-auto flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+    <button
+      type="button"
+      onClick={() => {
+        setStep(1);
+        setResult(null);
+        setError("");
+        setContactData(
+          initialContactData
+        );
+        setFormData({
+          ...initialFormData,
+          zoneSlug:
+            initialZoneSlug,
+        });
+      }}
+      className="rounded-full bg-[#ec8a36] px-6 py-3 text-center text-sm font-bold text-white transition hover:opacity-90"
+    >
+      Calcular otra vivienda en esta zona
+    </button>
+
+    <Link
+      href="/valora-tu-vivienda"
+      className="rounded-full border-2 border-[#033b79] px-6 py-3 text-center text-sm font-bold text-[#033b79] transition hover:bg-[#033b79] hover:text-white"
+    >
+      Elegir otra zona
+    </Link>
+  </div>
+)}
       </div>
     </div>
   );

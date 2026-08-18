@@ -39,6 +39,51 @@ function yesNo(value: boolean) {
   return value ? "Sí" : "No";
 }
 
+async function sendLeadToSheets(payload: unknown) {
+  const webhookUrl = process.env.MAKE_WEBHOOK_URL;
+
+  if (!webhookUrl) {
+    console.warn(
+      "MAKE_WEBHOOK_URL no configurada. Se omite el registro en Google Sheets."
+    );
+    return;
+  }
+
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 5000);
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Make respondió con ${response.status} ${response.statusText}`
+      );
+    }
+
+    console.log(
+      "Lead enviado correctamente a Make / Google Sheets"
+    );
+  } catch (error) {
+    console.error(
+      "Error enviando lead a Make / Google Sheets:",
+      error
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as LeadRequestBody;
@@ -124,6 +169,94 @@ export async function POST(request: NextRequest) {
       property: valuation,
       valuationResult: result,
     };
+const isHouse =
+  valuation.propertyType === "casa" ||
+  valuation.propertyType === "chalet";
+
+const demandData =
+  result.valuationEngine === "v2-apartment"
+    ? {
+        demandLabel: result.demandLabel,
+        potentialBuyers:
+          result.demand.buyers,
+        demandBedrooms:
+          result.demand.bedrooms,
+      }
+    : {
+        demandLabel: "",
+        potentialBuyers: "",
+        demandBedrooms: "",
+      };
+
+const sheetsLead = {
+  createdAt: lead.createdAt,
+
+  priority: contact.wantsToSell
+    ? "Sí"
+    : "No",
+
+  name: contact.name.trim(),
+  phone: contact.phone.trim(),
+  email: contact.email.trim(),
+
+  zone: result.zoneName,
+  postalCode: result.postalCode,
+
+  propertyType:
+    valuation.propertyType,
+
+  houseSubtype: isHouse
+    ? valuation.houseSubtype ??
+      "unknown"
+    : "",
+
+  squareMeters:
+    valuation.squareMeters,
+
+  bedrooms: valuation.bedrooms,
+  bathrooms: valuation.bathrooms,
+
+  condition: valuation.condition,
+
+  constructionPeriod:
+    valuation.constructionPeriod,
+
+  floor: isHouse
+    ? ""
+    : valuation.floor,
+
+  hasElevator: isHouse
+    ? ""
+    : yesNo(
+        valuation.hasElevator
+      ),
+
+  garage: yesNo(
+    valuation.extras.garage
+  ),
+
+  terrace: yesNo(
+    valuation.extras.terrace
+  ),
+
+  storage: yesNo(
+    valuation.extras.storage
+  ),
+
+  minPrice: result.minPrice,
+  maxPrice: result.maxPrice,
+
+  valuationEngine:
+    result.valuationEngine,
+
+  ...demandData,
+
+  sourceUrl: sourceUrl ?? "",
+
+  consent: yesNo(
+    contact.consent
+  ),
+};
 
     console.log("NUEVO LEAD TECNORETE TOLEDO");
     console.log(JSON.stringify(lead, null, 2));
@@ -417,13 +550,24 @@ const houseSubtypeLabel =
       .map((email) => email.trim())
       .filter(Boolean);
 
-    const { error } = await resend.emails.send({
-      from: leadEmailFrom,
-      to: emailRecipients,
-      subject,
-      html,
-      replyTo: contact.email,
-    });
+    const emailPromise =
+  resend.emails.send({
+    from: leadEmailFrom,
+    to: emailRecipients,
+    subject,
+    html,
+    replyTo: contact.email,
+  });
+
+const sheetsPromise =
+  sendLeadToSheets(sheetsLead);
+
+const [
+  { error },
+] = await Promise.all([
+  emailPromise,
+  sheetsPromise,
+]);
 
     if (error) {
       console.error(
