@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { zones } from "@/config/zones";
 import { siteConfig } from "@/config/site";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Valoración de vivienda en Toledo y alrededores",
@@ -26,7 +28,10 @@ export const metadata: Metadata = {
 
 export default function GeneralValuationPage() {
   return (
-    <main className="min-h-screen bg-[#f6f8fb]">
+    <>
+      <SiteHeader />
+
+      <main className="min-h-screen bg-[#f6f8fb]">
       <section className="bg-[#033b79] px-5 py-16 text-white md:px-8 md:py-24">
         <div className="mx-auto max-w-6xl">
           <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
@@ -152,6 +157,9 @@ export default function GeneralValuationPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+
+      <SiteFooter />
+    </>
   );
 }

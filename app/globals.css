@@ -1,34 +1,115 @@
 @import "tailwindcss";
 
+/*
+  =========================================================
+  TECNORETE TOLEDO — Sistema visual base (Bloque 1)
+  =========================================================
+  Formaliza como tokens los colores y superficies que ya se
+  usaban de forma repetida y "hardcodeada" en los componentes
+  (#033b79 / #ec8a36, ver también src/config/site.ts).
+
+  Esto NO es un rebranding: los valores de marca son los mismos
+  que ya estaban en producción, solo se centralizan para poder
+  reutilizarlos de forma consistente (bg-brand-blue, text-ink...)
+  en los próximos bloques del rediseño.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Marca */
+  --color-brand-blue: #033b79;
+  --color-brand-blue-dark: #022a56;
+  --color-brand-blue-tint: #eaf1f8;
+  --color-brand-orange: #ec8a36;
+  --color-brand-orange-tint: #fdf1e4;
+
+  /* Superficies */
+  --color-canvas: #f6f8fb; /* fondo neutro general de sección */
+  --color-surface: #ffffff; /* tarjetas y bloques de contenido */
+  --color-border: #e2e8f0;
+
+  /* Texto */
+  --color-ink: #0f172a; /* texto principal */
+  --color-ink-muted: #475569; /* texto secundario */
+
+  /* Compatibilidad con la configuración previa de Tailwind */
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-brand-blue: var(--color-brand-blue);
+  --color-brand-blue-dark: var(--color-brand-blue-dark);
+  --color-brand-blue-tint: var(--color-brand-blue-tint);
+  --color-brand-orange: var(--color-brand-orange);
+  --color-brand-orange-tint: var(--color-brand-orange-tint);
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /*
+    Escala tipográfica base, formalizada para el sistema visual.
+    Deliberadamente NO se aplica todavía a ningún componente
+    (ValuationForm, secciones de mercado/demanda/metodología, etc.)
+    para no alterar un diseño ya validado fuera de este bloque.
+    Queda disponible como text-display / text-h1 / text-h2 / text-h3 /
+    text-body / text-caption para los siguientes bloques del rediseño.
+  */
+  --text-display: 3rem;
+  --text-display--line-height: 1.05;
+  --text-h1: 2.5rem;
+  --text-h1--line-height: 1.1;
+  --text-h2: 1.875rem;
+  --text-h2--line-height: 1.2;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.35;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.4;
+
+  /* Sombra de marca para futuros bloques de énfasis (CTA, resultado). */
+  --shadow-brand: 0 16px 32px -12px rgba(3, 59, 121, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/*
+  Radios y sombras: se mantiene la escala por defecto de Tailwind
+  ya utilizada en todo el proyecto (rounded-2xl para inputs/botones,
+  rounded-3xl para tarjetas/secciones, shadow-sm para elevación
+  ligera). No se redefine porque ya es coherente; formalizarla aquí
+  es documentar la convención, no crear nuevos tokens redundantes.
+*/
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
 }
+
+/*
+  Estado de foco accesible para navegación por teclado. Es aditivo:
+  no sustituye los estilos focus: ya definidos en los componentes
+  existentes (por ejemplo focus:border-[#033b79] en ValuationForm),
+  solo añade un anillo de foco visible que hoy no existe.
+*/
+:is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
 input,
 select,
 textarea {
-  color: #0f172a;
-  background-color: #ffffff;
+  color: var(--color-ink);
+  background-color: var(--color-surface);
 }
 
 input::placeholder,
@@ -38,10 +119,10 @@ textarea::placeholder {
 }
 
 select option {
-  color: #0f172a;
-  background-color: #ffffff;
+  color: var(--color-ink);
+  background-color: var(--color-surface);
 }
 
 input[type="checkbox"] {
-  accent-color: #ec8a36;
+  accent-color: var(--color-brand-orange);
 }

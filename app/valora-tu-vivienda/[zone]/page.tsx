@@ -9,6 +9,8 @@ import { DemandInsightsSection } from "@/components/DemandInsightsSection";
 import { HowValuationWorksSection } from "@/components/HowValuationWorksSection";
 import { FinalValuationCta } from "@/components/FinalValuationCta";
 import { OtherZonesSection } from "@/components/OtherZonesSection";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 type ZonePageProps = {
   params: Promise<{
@@ -81,7 +83,10 @@ export default async function ZoneValuationPage({
   const seoContent = getZoneSeoContent(zone.slug);
 
   return (
-    <main className="min-h-screen bg-[#f6f8fb] px-5 py-8 md:px-8">
+    <>
+      <SiteHeader />
+
+      <main className="min-h-screen bg-[#f6f8fb] px-5 py-8 md:px-8">
       <section className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
           <div
@@ -204,6 +209,9 @@ export default async function ZoneValuationPage({
 />
         </div>
       )}
-    </main>
+      </main>
+
+      <SiteFooter />
+    </>
   );
 }
