@@ -4,6 +4,11 @@ import { zones } from "@/config/zones";
 import { siteConfig } from "@/config/site";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { MotionReveal } from "@/components/motion/MotionReveal";
+import {
+  MotionStaggerGroup,
+  MotionStaggerItem,
+} from "@/components/motion/MotionStagger";
 
 export const metadata: Metadata = {
   title: "Valoración de vivienda en Toledo y alrededores",
@@ -33,31 +38,39 @@ export default function GeneralValuationPage() {
 
       <main className="min-h-screen bg-[#f6f8fb]">
       <section className="bg-[#033b79] px-5 py-16 text-white md:px-8 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
-            {siteConfig.name}
-          </p>
+        <MotionStaggerGroup className="mx-auto max-w-6xl">
+          <MotionStaggerItem>
+            <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
+              {siteConfig.name}
+            </p>
+          </MotionStaggerItem>
 
-          <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
-            ¿Cuánto vale tu vivienda?
-          </h1>
+          <MotionStaggerItem>
+            <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
+              ¿Cuánto vale tu vivienda?
+            </h1>
+          </MotionStaggerItem>
 
-          <p className="mt-6 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
-            Selecciona la zona en la que se encuentra tu vivienda y obtén una
-            primera estimación orientativa de su valor en pocos pasos.
-          </p>
+          <MotionStaggerItem>
+            <p className="mt-6 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
+              Selecciona la zona en la que se encuentra tu vivienda y obtén
+              una primera estimación orientativa de su valor en pocos pasos.
+            </p>
+          </MotionStaggerItem>
 
-          <p className="mt-4 max-w-3xl text-sm leading-6 text-white/65">
-            Nuestra herramienta combina referencias de mercado con la
-            localización y las principales características del inmueble para
-            calcular un rango estimado.
-          </p>
-        </div>
+          <MotionStaggerItem>
+            <p className="mt-4 max-w-3xl text-sm leading-6 text-white/65">
+              Nuestra herramienta combina referencias de mercado con la
+              localización y las principales características del inmueble
+              para calcular un rango estimado.
+            </p>
+          </MotionStaggerItem>
+        </MotionStaggerGroup>
       </section>
 
       <section className="px-5 py-12 md:px-8 md:py-16">
         <div className="mx-auto max-w-6xl">
-          <div className="max-w-3xl">
+          <MotionReveal trigger="viewport" className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
               Selecciona tu zona
             </p>
@@ -71,55 +84,65 @@ export default function GeneralValuationPage() {
               nuestra herramienta de valoración. Elige la correspondiente a tu
               inmueble para comenzar.
             </p>
-          </div>
+          </MotionReveal>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <MotionStaggerGroup
+            trigger="viewport"
+            staggerDelay={0.06}
+            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {zones.map((zone) => (
-              <Link
-                key={zone.slug}
-                href={`/valora-tu-vivienda/${zone.slug}`}
-                className="group overflow-hidden rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-              >
-                <div
-                  className="relative min-h-[220px] bg-[#033b79] bg-cover bg-center"
-                  style={{
-                    backgroundImage: `linear-gradient(180deg, rgba(3, 59, 121, 0.15), rgba(3, 59, 121, 0.9)), url(${zone.heroImage})`,
-                  }}
+              <MotionStaggerItem key={zone.slug}>
+                <Link
+                  href={`/valora-tu-vivienda/${zone.slug}`}
+                  className="group block overflow-hidden rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]"
                 >
-                  <div className="absolute inset-0 flex flex-col justify-end p-6">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#f4a45f]">
-                      CP {zone.postalCode}
+                  <div className="relative min-h-[220px] overflow-hidden bg-[#033b79]">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      style={{
+                        backgroundImage: `linear-gradient(180deg, rgba(3, 59, 121, 0.15), rgba(3, 59, 121, 0.9)), url(${zone.heroImage})`,
+                      }}
+                    />
+
+                    <div className="absolute inset-0 flex flex-col justify-end p-6">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#f4a45f]">
+                        CP {zone.postalCode}
+                      </p>
+
+                      <h2 className="mt-2 text-2xl font-bold text-white">
+                        {zone.name}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <p className="text-sm leading-6 text-slate-600">
+                      {zone.subheadline}
                     </p>
 
-                    <h2 className="mt-2 text-2xl font-bold text-white">
-                      {zone.name}
-                    </h2>
+                    <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#033b79]">
+                      Calcular valor
+                      <span
+                        className="transition-transform group-hover:translate-x-1"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                    </div>
                   </div>
-                </div>
-
-                <div className="p-6">
-                  <p className="text-sm leading-6 text-slate-600">
-                    {zone.subheadline}
-                  </p>
-
-                  <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#033b79]">
-                    Calcular valor
-                    <span
-                      className="transition-transform group-hover:translate-x-1"
-                      aria-hidden="true"
-                    >
-                      →
-                    </span>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </MotionStaggerItem>
             ))}
-          </div>
+          </MotionStaggerGroup>
         </div>
       </section>
 
       <section className="px-5 pb-16 md:px-8 md:pb-24">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-white p-6 shadow-sm md:p-10">
+        <MotionReveal
+          trigger="viewport"
+          className="mx-auto max-w-6xl rounded-3xl bg-white p-6 shadow-sm md:p-10"
+        >
           <div className="grid gap-8 lg:grid-cols-2">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-[#033b79] md:text-3xl">
@@ -155,7 +178,7 @@ export default function GeneralValuationPage() {
               presencial del inmueble.
             </p>
           </div>
-        </div>
+        </MotionReveal>
       </section>
       </main>
 

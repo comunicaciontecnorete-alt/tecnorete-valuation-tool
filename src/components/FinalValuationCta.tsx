@@ -35,14 +35,14 @@ export function FinalValuationCta({
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
             href="#calculadora-valoracion"
-            className="inline-flex items-center justify-center rounded-2xl bg-[#ec8a36] px-6 py-4 text-sm font-bold text-white transition hover:opacity-90"
+            className="inline-flex items-center justify-center rounded-2xl bg-[#ec8a36] px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-px hover:opacity-90 active:scale-[0.98]"
           >
             Valorar mi vivienda
           </a>
 
           <a
             href={`tel:${siteConfig.phone}`}
-            className="inline-flex items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-6 py-4 text-sm font-bold text-white transition hover:bg-white/15"
+            className="inline-flex items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-px hover:bg-white/15 active:scale-[0.98]"
           >
             Llamar al {siteConfig.phone}
           </a>

@@ -10,6 +10,7 @@
     "import:market": "node scripts/import-market-report.mjs"
   },
   "dependencies": {
+    "motion": "^13.1.0",
     "next": "16.2.12",
     "pdf-parse": "^2.4.5",
     "react": "19.2.4",
