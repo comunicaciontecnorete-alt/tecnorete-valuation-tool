@@ -47,6 +47,34 @@ export function SiteFooter() {
           </div>
         </div>
 
+        {siteConfig.offices && siteConfig.offices.length > 0 && (
+          <div className="mt-6 grid gap-6 border-t border-border pt-6 sm:grid-cols-2">
+            {siteConfig.offices.map((office) => (
+              <div key={office.phone}>
+                <p className="text-sm font-bold text-brand-blue">
+                  {office.name}
+                </p>
+
+                <a
+                  href={`tel:${office.phone}`}
+                  className="mt-1 block text-sm text-ink-muted hover:underline"
+                >
+                  {office.phone}
+                </a>
+
+                <a
+                  href={office.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block text-sm text-ink-muted hover:underline"
+                >
+                  Web oficial
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-6 border-t border-border pt-6 text-xs leading-5 text-ink-muted">
           © {year} {siteConfig.companyName} · CIF {siteConfig.cif}
         </div>

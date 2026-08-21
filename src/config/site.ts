@@ -4,6 +4,20 @@ export const siteConfig = {
   cif: "B75708727",
   address: "Ronda de Buenavista, 33/35 - 45005 (Toledo)",
   phone: "663543464",
+  offices: [
+    {
+      name: "Tecnorete Toledo 1 - Buenavista",
+      shortName: "Buenavista",
+      phone: "663543464",
+      website: "https://toledo1.tecnorete.es/toledo/toledo/",
+    },
+    {
+      name: "Tecnorete Toledo 2 - Polígono",
+      shortName: "Polígono",
+      phone: "606125139",
+      website: "https://toledo2.tecnorete.es/",
+    },
+  ],
   legalEmail: "to002@tecnorete.es",
   testLeadEmail: "danielglop@gmail.com",
   privacyPath: "/politica-privacidad",

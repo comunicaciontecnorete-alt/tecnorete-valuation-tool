@@ -40,12 +40,15 @@ export function FinalValuationCta({
             Valorar mi vivienda
           </a>
 
-          <a
-            href={`tel:${siteConfig.phone}`}
-            className="inline-flex items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-px hover:bg-white/15 active:scale-[0.98]"
-          >
-            Llamar al {siteConfig.phone}
-          </a>
+          {siteConfig.offices.map((office) => (
+            <a
+              key={office.phone}
+              href={`tel:${office.phone}`}
+              className="inline-flex items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-px hover:bg-white/15 active:scale-[0.98]"
+            >
+              {office.shortName} · {office.phone}
+            </a>
+          ))}
         </div>
 
         <p className="mt-5 text-xs leading-5 text-white/60">
