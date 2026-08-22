@@ -28,6 +28,26 @@ export const metadata: Metadata = {
     description:
       "Selecciona tu zona y calcula una estimación orientativa del valor de tu vivienda con Tecnorete Toledo.",
     url: "/valora-tu-vivienda",
+    images: [
+      {
+        url: "/images/og-tecnorete-toledo.png",
+        width: 1200,
+        height: 630,
+        alt: "Valora tu vivienda en Toledo con Tecnorete Toledo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Valoración de vivienda en Toledo y alrededores | ${siteConfig.name}`,
+    description:
+      "Selecciona tu zona y calcula una estimación orientativa del valor de tu vivienda con Tecnorete Toledo.",
+    images: [
+      {
+        url: "/images/og-tecnorete-toledo.png",
+        alt: "Valora tu vivienda en Toledo con Tecnorete Toledo",
+      },
+    ],
   },
 };
 
