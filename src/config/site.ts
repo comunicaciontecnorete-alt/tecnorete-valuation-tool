@@ -1,5 +1,7 @@
 export const siteConfig = {
   name: "Tecnorete Toledo",
+  url: "https://www.valoratuviviendatoledo.es",
+  logoPath: "/images/tecnorete-logo.png",
   companyName: "Distrito Ciudad de Toledo, SL",
   cif: "B75708727",
   address: "Ronda de Buenavista, 33/35 - 45005 (Toledo)",
