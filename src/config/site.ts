@@ -18,6 +18,24 @@ export const siteConfig = {
       website: "https://toledo2.tecnorete.es/",
     },
   ],
+  socialLinks: [
+    {
+      name: "Instagram",
+      href: "https://www.instagram.com/tecnoretetoledo/",
+    },
+    {
+      name: "Facebook",
+      href: "https://www.facebook.com/profile.php?id=61592482239927",
+    },
+    {
+      name: "YouTube",
+      href: "https://www.youtube.com/@TecnoreteToledo",
+    },
+    {
+      name: "TikTok",
+      href: "https://www.tiktok.com/@tecnorete.toledo",
+    },
+  ],
   legalEmail: "to002@tecnorete.es",
   testLeadEmail: "danielglop@gmail.com",
   privacyPath: "/politica-privacidad",

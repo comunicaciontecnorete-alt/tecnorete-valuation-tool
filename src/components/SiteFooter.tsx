@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
+import { SocialLinks } from "@/components/SocialLinks";
 
 /**
  * Footer corporativo sencillo para las páginas de valoración.
@@ -44,6 +45,8 @@ export function SiteFooter() {
             <Link href={siteConfig.privacyPath} className="hover:underline">
               Política de privacidad
             </Link>
+
+            <SocialLinks className="mt-3 md:justify-end" />
           </div>
         </div>
 

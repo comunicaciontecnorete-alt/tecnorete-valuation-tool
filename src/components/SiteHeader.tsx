@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { MotionReveal } from "@/components/motion/MotionReveal";
+import { SocialLinks } from "@/components/SocialLinks";
 
 function formatPhoneForDisplay(phone: string) {
   const digits = phone.replace(/\D/g, "");
@@ -64,6 +65,7 @@ export function SiteHeader() {
                 </a>
               </div>
             ))}
+            <SocialLinks className="hidden flex-shrink-0 lg:flex" />
           </div>
         )}
       </MotionReveal>
