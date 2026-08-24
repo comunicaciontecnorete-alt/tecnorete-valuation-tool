@@ -389,6 +389,9 @@ export function ValuationForm({
                 value={
                   formData.squareMeters
                 }
+                onFocus={(event) =>
+                  event.currentTarget.select()
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
@@ -426,6 +429,9 @@ export function ValuationForm({
                 value={
                   formData.bedrooms
                 }
+                onFocus={(event) =>
+                  event.currentTarget.select()
+                }
                 onChange={(event) =>
                   setFormData({
                     ...formData,
@@ -448,6 +454,9 @@ export function ValuationForm({
                 min="0"
                 value={
                   formData.bathrooms
+                }
+                onFocus={(event) =>
+                  event.currentTarget.select()
                 }
                 onChange={(event) =>
                   setFormData({

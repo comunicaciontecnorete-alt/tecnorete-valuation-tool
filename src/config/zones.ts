@@ -23,9 +23,9 @@ export const zones: Zone[] = [
   },
   {
     postalCode: "45005",
-    name: "Toledo Sur",
+    name: "Barrio Buenavista",
     slug: "toledo-sur",
-    headline: "Calcula el valor de tu piso en Toledo Sur",
+    headline: "Calcula el valor de tu piso en Barrio Buenavista",
     subheadline:
       "Una estimación rápida y orientativa basada en la zona y las características del inmueble.",
     basePricePerSqm: 1450,
