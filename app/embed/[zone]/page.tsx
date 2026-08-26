@@ -1,6 +1,11 @@
 import { ValuationForm } from "@/components/ValuationForm";
 import { notFound } from "next/navigation";
-import { getZoneBySlug, zones } from "@/config/zones";
+import Link from "next/link";
+import {
+  getChildZones,
+  getZoneBySlug,
+  zones,
+} from "@/config/zones";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 
@@ -61,6 +66,8 @@ export default async function EmbedZonePage({
     notFound();
   }
 
+  const childZones = getChildZones(zone.slug);
+
   return (
     <main className="min-h-screen bg-white px-4 py-5">
       <section className="mx-auto max-w-xl">
@@ -78,7 +85,32 @@ export default async function EmbedZonePage({
           </p>
         </div>
 
-        <ValuationForm initialZoneSlug={zone.slug} />
+        {zone.valuationEnabled === false ? (
+          <section className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+            <h2 className="text-xl font-bold text-[#033b79]">
+              ¿Dónde está tu vivienda?
+            </h2>
+
+            <div className="mt-4 grid gap-3">
+              {childZones.map((childZone) => (
+                <Link
+                  key={childZone.slug}
+                  href={`/embed/${childZone.slug}`}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-[#033b79] transition hover:border-[#033b79]/30"
+                >
+                  {childZone.name} →
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <ValuationForm
+            initialZoneSlug={zone.slug}
+            allowedPropertyTypes={
+              zone.allowedPropertyTypes
+            }
+          />
+        )}
       </section>
     </main>
   );

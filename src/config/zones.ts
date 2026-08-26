@@ -23,12 +23,45 @@ export const zones: Zone[] = [
   },
   {
     postalCode: "45005",
-    name: "Barrio Buenavista",
+    name: "Toledo Sur",
     slug: "toledo-sur",
-    headline: "Calcula el valor de tu piso en Barrio Buenavista",
+    valuationEnabled: false,
+    headline: "Valoración de vivienda en Toledo Sur",
     subheadline:
-      "Una estimación rápida y orientativa basada en la zona y las características del inmueble.",
+      "Selecciona Buenavista, La Legua o Valparaíso para obtener una estimación adaptada a tu subzona.",
     basePricePerSqm: 1450,
+    heroImage: "/images/zones/toledo-sur.jpg",
+  },
+  {
+    postalCode: "45005",
+    name: "Buenavista",
+    slug: "buenavista",
+    parentZoneSlug: "toledo-sur",
+    headline: "¿Cuánto vale tu vivienda en Buenavista?",
+    subheadline: "Zona residencial con valoración específica.",
+    basePricePerSqm: 2000,
+    heroImage: "/images/zones/toledo-sur.jpg",
+  },
+  {
+    postalCode: "45005",
+    name: "La Legua",
+    slug: "la-legua",
+    parentZoneSlug: "toledo-sur",
+    allowedPropertyTypes: ["casa", "chalet"],
+    headline: "Calcula el valor de tu casa en La Legua",
+    subheadline: "Vivienda unifamiliar.",
+    basePricePerSqm: 1600,
+    heroImage: "/images/zones/toledo-sur.jpg",
+  },
+  {
+    postalCode: "45005",
+    name: "Valparaíso",
+    slug: "valparaiso",
+    parentZoneSlug: "toledo-sur",
+    allowedPropertyTypes: ["casa", "chalet"],
+    headline: "Calcula el valor de tu casa en Valparaíso",
+    subheadline: "Vivienda unifamiliar.",
+    basePricePerSqm: 1800,
     heroImage: "/images/zones/toledo-sur.jpg",
   },
   {
@@ -85,4 +118,14 @@ export const zones: Zone[] = [
 
 export function getZoneBySlug(slug: string) {
   return zones.find((zone) => zone.slug === slug);
+}
+
+export function getChildZones(parentSlug: string) {
+  return zones.filter(
+    (zone) => zone.parentZoneSlug === parentSlug
+  );
+}
+
+export function getTopLevelZones() {
+  return zones.filter((zone) => !zone.parentZoneSlug);
 }

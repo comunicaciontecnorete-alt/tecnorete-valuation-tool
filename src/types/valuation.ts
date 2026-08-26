@@ -22,6 +22,9 @@ export type Zone = {
   postalCode: string;
   name: string;
   slug: string;
+  parentZoneSlug?: string;
+  valuationEnabled?: boolean;
+  allowedPropertyTypes?: PropertyType[];
   headline: string;
   subheadline: string;
   basePricePerSqm: number;

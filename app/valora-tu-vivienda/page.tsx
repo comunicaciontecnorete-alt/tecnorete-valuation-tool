@@ -1,6 +1,9 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
-import { zones } from "@/config/zones";
+import {
+  getChildZones,
+  getTopLevelZones,
+} from "@/config/zones";
 import { siteConfig } from "@/config/site";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -52,6 +55,8 @@ export const metadata: Metadata = {
 };
 
 export default function GeneralValuationPage() {
+  const topLevelZones = getTopLevelZones();
+
   return (
     <>
       <SiteHeader />
@@ -111,49 +116,112 @@ export default function GeneralValuationPage() {
             staggerDelay={0.06}
             className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {zones.map((zone) => (
-              <MotionStaggerItem key={zone.slug}>
-                <Link
-                  href={`/valora-tu-vivienda/${zone.slug}`}
-                  className="group block overflow-hidden rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]"
+            {topLevelZones.map((zone) => {
+              const childZones = getChildZones(zone.slug);
+
+              return (
+                <MotionStaggerItem
+                  key={zone.slug}
+                  className={
+                    childZones.length > 0
+                      ? "sm:col-span-2 lg:col-span-3"
+                      : undefined
+                  }
                 >
-                  <div className="relative min-h-[220px] overflow-hidden bg-[#033b79]">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-105"
-                      style={{
-                        backgroundImage: `linear-gradient(180deg, rgba(3, 59, 121, 0.15), rgba(3, 59, 121, 0.9)), url(${zone.heroImage})`,
-                      }}
-                    />
-
-                    <div className="absolute inset-0 flex flex-col justify-end p-6">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#f4a45f]">
-                        CP {zone.postalCode}
-                      </p>
-
-                      <h2 className="mt-2 text-2xl font-bold text-white">
-                        {zone.name}
-                      </h2>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <p className="text-sm leading-6 text-slate-600">
-                      {zone.subheadline}
-                    </p>
-
-                    <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#033b79]">
-                      Calcular valor
-                      <span
-                        className="transition-transform group-hover:translate-x-1"
-                        aria-hidden="true"
+                  {childZones.length > 0 ? (
+                    <section className="rounded-3xl border border-[#033b79]/10 bg-[#eaf1f8] p-4 shadow-sm md:p-6">
+                      <Link
+                        href={`/valora-tu-vivienda/${zone.slug}`}
+                        className="group grid overflow-hidden rounded-2xl bg-white md:grid-cols-[0.8fr_1.2fr]"
                       >
-                        →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </MotionStaggerItem>
-            ))}
+                        <div
+                          className="min-h-[190px] bg-[#033b79] bg-cover bg-center"
+                          style={{
+                            backgroundImage: `linear-gradient(180deg, rgba(3, 59, 121, 0.2), rgba(3, 59, 121, 0.88)), url(${zone.heroImage})`,
+                          }}
+                        />
+
+                        <div className="p-6 md:p-8">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#ec8a36]">
+                            Área · CP {zone.postalCode}
+                          </p>
+
+                          <h2 className="mt-2 text-3xl font-bold text-[#033b79]">
+                            {zone.name}
+                          </h2>
+
+                          <p className="mt-3 text-sm leading-6 text-slate-600">
+                            {zone.subheadline}
+                          </p>
+
+                          <p className="mt-5 text-sm font-bold text-[#033b79]">
+                            Ver área y elegir subzona →
+                          </p>
+                        </div>
+                      </Link>
+
+                      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                        {childZones.map((childZone) => (
+                          <Link
+                            key={childZone.slug}
+                            href={`/valora-tu-vivienda/${childZone.slug}`}
+                            className="rounded-2xl border border-white bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#033b79]/20 hover:shadow-sm"
+                          >
+                            <h3 className="font-bold text-[#033b79]">
+                              {childZone.name}
+                            </h3>
+
+                            <p className="mt-2 text-xs leading-5 text-slate-600">
+                              {childZone.subheadline}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
+                    </section>
+                  ) : (
+                    <Link
+                      href={`/valora-tu-vivienda/${zone.slug}`}
+                      className="group block overflow-hidden rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]"
+                    >
+                      <div className="relative min-h-[220px] overflow-hidden bg-[#033b79]">
+                        <div
+                          className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-105"
+                          style={{
+                            backgroundImage: `linear-gradient(180deg, rgba(3, 59, 121, 0.15), rgba(3, 59, 121, 0.9)), url(${zone.heroImage})`,
+                          }}
+                        />
+
+                        <div className="absolute inset-0 flex flex-col justify-end p-6">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#f4a45f]">
+                            CP {zone.postalCode}
+                          </p>
+
+                          <h2 className="mt-2 text-2xl font-bold text-white">
+                            {zone.name}
+                          </h2>
+                        </div>
+                      </div>
+
+                      <div className="p-6">
+                        <p className="text-sm leading-6 text-slate-600">
+                          {zone.subheadline}
+                        </p>
+
+                        <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#033b79]">
+                          Calcular valor
+                          <span
+                            className="transition-transform group-hover:translate-x-1"
+                            aria-hidden="true"
+                          >
+                            →
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </MotionStaggerItem>
+              );
+            })}
           </MotionStaggerGroup>
         </div>
       </section>

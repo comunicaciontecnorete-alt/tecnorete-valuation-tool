@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { calculateValuationHybrid } from "@/lib/calculateValuationHybrid";
 import type { ValuationInput } from "@/types/valuation";
 import { siteConfig } from "@/config/site";
+import { getZoneBySlug } from "@/config/zones";
 
 type LeadContactData = {
   name: string;
@@ -197,6 +198,48 @@ export async function POST(request: NextRequest) {
       street,
       streetNumber,
     };
+
+    const zone =
+      typeof normalizedValuation.zoneSlug === "string"
+        ? getZoneBySlug(normalizedValuation.zoneSlug)
+        : undefined;
+
+    if (!zone) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La zona indicada no existe.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (zone.valuationEnabled === false) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "Selecciona una subzona concreta para realizar la valoración.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (
+      zone.allowedPropertyTypes &&
+      !zone.allowedPropertyTypes.includes(
+        normalizedValuation.propertyType
+      )
+    ) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "El tipo de inmueble no está disponible para la zona seleccionada.",
+        },
+        { status: 400 }
+      );
+    }
 
     if (!contact.name?.trim()) {
       return NextResponse.json(

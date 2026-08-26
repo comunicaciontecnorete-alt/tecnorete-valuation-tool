@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { zones } from "@/config/zones";
+import {
+  getChildZones,
+  getTopLevelZones,
+  getZoneBySlug,
+} from "@/config/zones";
 
 type OtherZonesSectionProps = {
   currentZoneSlug: string;
@@ -8,9 +12,22 @@ type OtherZonesSectionProps = {
 export function OtherZonesSection({
   currentZoneSlug,
 }: OtherZonesSectionProps) {
-  const otherZones = zones.filter(
-    (zone) => zone.slug !== currentZoneSlug
-  );
+  const currentZone = getZoneBySlug(currentZoneSlug);
+  const parentZone = currentZone?.parentZoneSlug
+    ? getZoneBySlug(currentZone.parentZoneSlug)
+    : undefined;
+
+  const otherZones = parentZone
+    ? getChildZones(parentZone.slug).filter(
+        (zone) => zone.slug !== currentZoneSlug
+      )
+    : currentZone
+      ? getChildZones(currentZone.slug).length > 0
+        ? getChildZones(currentZone.slug)
+        : getTopLevelZones().filter(
+            (zone) => zone.slug !== currentZoneSlug
+          )
+      : getTopLevelZones();
 
   return (
     <section className="rounded-3xl border border-[#033b79]/10 bg-[#eaf1f8] p-6 md:p-10">
@@ -29,7 +46,18 @@ export function OtherZonesSection({
         </p>
       </div>
 
-     <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {parentZone && (
+        <div className="mt-6">
+          <Link
+            href={`/valora-tu-vivienda/${parentZone.slug}`}
+            className="inline-flex rounded-full border border-[#033b79]/20 bg-white px-4 py-2 text-sm font-bold text-[#033b79] transition hover:border-[#033b79]/40"
+          >
+            ← Volver al área {parentZone.name}
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {otherZones.map((zone) => (
           <Link
             key={zone.slug}
@@ -45,7 +73,9 @@ export function OtherZonesSection({
             </h3>
 
             <p className="mt-3 text-sm font-semibold text-slate-600 transition group-hover:text-[#033b79]">
-              Calcular valoración →
+              {zone.valuationEnabled === false
+                ? "Ver subzonas →"
+                : "Calcular valoración →"}
             </p>
           </Link>
         ))}

@@ -72,16 +72,16 @@ export const zoneSeoContent: Record<string, ZoneSeoContent> = {
   "toledo-sur": {
     seoTitle: "Valoración de vivienda en Toledo Sur",
     seoDescription:
-      "Obtén una estimación orientativa del valor de tu vivienda en Toledo Sur según superficie, estado, tipología y características.",
+      "Encuentra la valoración correspondiente a Buenavista, La Legua o Valparaíso, las tres subzonas del área Toledo Sur.",
 
     intro:
-      "Saber cuánto puede valer una vivienda en Toledo Sur requiere analizar algo más que sus metros cuadrados. Nuestra herramienta tiene en cuenta diferentes características del inmueble para calcular un rango orientativo que sirva como primera referencia antes de una posible venta.",
+      "Toledo Sur es el área que comprende Buenavista, La Legua y Valparaíso. Como cada subzona dispone de una referencia propia y no comparte la misma tipología residencial, esta página permite identificar primero la ubicación concreta antes de iniciar una valoración.",
 
     marketContext:
-      "Toledo Sur agrupa áreas residenciales con viviendas de distintas tipologías, superficies y características. Esto hace especialmente importante diferenciar entre inmuebles y evitar utilizar una única referencia de precio para todas las viviendas.",
+      "Buenavista, La Legua y Valparaíso tienen referencias de mercado diferenciadas. Por ese motivo no se aplica una valoración genérica a todo Toledo Sur: la estimación comienza seleccionando la subzona en la que se encuentra la vivienda.",
 
     propertyTypes:
-      "Dependiendo de la ubicación concreta pueden encontrarse pisos, dúplex, áticos y otras tipologías residenciales. Cada una de ellas puede comportarse de forma diferente en una valoración inmobiliaria.",
+      "La configuración distingue Buenavista de las zonas de vivienda unifamiliar de La Legua y Valparaíso. Esta separación permite utilizar en cada landing solamente los tipos de inmueble que corresponden.",
 
     valuationFactors: [
       "Superficie del inmueble",
@@ -93,9 +93,93 @@ export const zoneSeoContent: Record<string, ZoneSeoContent> = {
       "Terraza y otros espacios exteriores",
     ],
 
-    ctaTitle: "Conoce mejor el valor de tu vivienda en Toledo Sur",
+    ctaTitle: "Selecciona tu subzona de Toledo Sur",
     ctaText:
-      "Si el resultado de la calculadora encaja con tus expectativas y estás considerando vender, Tecnorete puede estudiar el inmueble de forma individual y realizar una valoración profesional.",
+      "Elige Buenavista, La Legua o Valparaíso para acceder a una estimación adaptada a la ubicación y tipología de la vivienda.",
+  },
+
+  buenavista: {
+    seoTitle: "Valoración de vivienda en Buenavista, Toledo",
+    seoDescription:
+      "Calcula una estimación orientativa de tu vivienda en Buenavista, subzona de Toledo Sur con código postal 45005.",
+
+    intro:
+      "Buenavista es una de las tres subzonas que forman Toledo Sur. La calculadora utiliza la ubicación concreta y las características introducidas para ofrecer una primera estimación orientativa de la vivienda.",
+
+    marketContext:
+      "La referencia local aprobada para pisos en Buenavista es de 2.000 € por metro cuadrado construido. Esta referencia territorial actúa como punto de partida antes de aplicar los ajustes correspondientes al inmueble.",
+
+    propertyTypes:
+      "La referencia local disponible corresponde a pisos. La herramienta mantiene la diferenciación por tipo de inmueble y considera además superficie, estado, planta, ascensor y extras cuando proceda.",
+
+    valuationFactors: [
+      "Referencia local de la subzona",
+      "Metros cuadrados construidos",
+      "Tipo de inmueble",
+      "Estado de conservación",
+      "Planta y ascensor cuando corresponda",
+      "Garaje, terraza o trastero",
+    ],
+
+    ctaTitle: "Conoce el valor orientativo de tu vivienda en Buenavista",
+    ctaText:
+      "Introduce los datos de la vivienda para obtener un rango inicial. Si estás valorando vender, Tecnorete puede revisar posteriormente el inmueble de forma individual.",
+  },
+
+  "la-legua": {
+    seoTitle: "Valoración de casa en La Legua, Toledo",
+    seoDescription:
+      "Obtén una estimación orientativa para una casa o chalet en La Legua, subzona de Toledo Sur con código postal 45005.",
+
+    intro:
+      "La Legua forma parte de Toledo Sur y, según la información aportada por Tecnorete, su mercado corresponde a vivienda unifamiliar. Por ello la calculadora de esta subzona se limita a casas y chalets.",
+
+    marketContext:
+      "La referencia local aprobada para La Legua es de 1.600 € por metro cuadrado construido. Entre las operaciones aportadas figuran Francisco de Pisa, con 1.600 €/m², y Jerónimo Cevallos, con 1.650 €/m².",
+
+    propertyTypes:
+      "La valoración está configurada exclusivamente para casa y chalet. No se ofrecen opciones de piso, ático o dúplex en esta subzona.",
+
+    valuationFactors: [
+      "Referencia local de La Legua",
+      "Superficie construida",
+      "Subtipo de vivienda unifamiliar",
+      "Estado de conservación",
+      "Tamaño de la vivienda",
+      "Garaje, terraza o trastero",
+    ],
+
+    ctaTitle: "Calcula el valor orientativo de tu casa en La Legua",
+    ctaText:
+      "Completa las características de la casa o chalet para obtener un rango inicial adaptado a esta subzona de Toledo Sur.",
+  },
+
+  valparaiso: {
+    seoTitle: "Valoración de casa en Valparaíso, Toledo",
+    seoDescription:
+      "Calcula una estimación orientativa para una casa o chalet en Valparaíso, subzona de Toledo Sur con código postal 45005.",
+
+    intro:
+      "Valparaíso es una subzona de Toledo Sur cuyo mercado, según la información aportada por Tecnorete, corresponde a vivienda unifamiliar. La herramienta permite valorar casas y chalets con una configuración propia.",
+
+    marketContext:
+      "La referencia local aprobada para Valparaíso es de 1.800 € por metro cuadrado construido. Los ejemplos aportados para la revisión se sitúan entre 1.675 y 2.000 €/m², mostrando la necesidad de considerar las características de cada vivienda.",
+
+    propertyTypes:
+      "La calculadora de Valparaíso admite exclusivamente casa y chalet. Las opciones de piso, ático y dúplex permanecen deshabilitadas para esta subzona.",
+
+    valuationFactors: [
+      "Referencia local de Valparaíso",
+      "Superficie construida",
+      "Subtipo de casa o chalet",
+      "Estado de conservación",
+      "Tamaño del inmueble",
+      "Garaje, terraza o trastero",
+    ],
+
+    ctaTitle: "Calcula el valor orientativo de tu casa en Valparaíso",
+    ctaText:
+      "Indica las características de la vivienda unifamiliar para obtener una primera estimación específica de Valparaíso.",
   },
 
   azucaica: {

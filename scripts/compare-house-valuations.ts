@@ -196,6 +196,50 @@ const cases: HouseTestCase[] = [
       },
     },
   },
+  {
+    name: "Casa La Legua - referencia local",
+    subtype: "unknown",
+    input: {
+      zoneSlug: "la-legua",
+      street: "Calle Francisco de Pisa",
+      streetNumber: "1",
+      propertyType: "casa",
+      squareMeters: 140,
+      bedrooms: 3,
+      bathrooms: 2,
+      floor: "bajo",
+      hasElevator: false,
+      condition: "buen-estado",
+      constructionPeriod: "1991-2005",
+      extras: {
+        garage: true,
+        terrace: true,
+        storage: false,
+      },
+    },
+  },
+  {
+    name: "Chalet Valparaíso - referencia local",
+    subtype: "unknown",
+    input: {
+      zoneSlug: "valparaiso",
+      street: "Calle de prueba",
+      streetNumber: "1",
+      propertyType: "chalet",
+      squareMeters: 180,
+      bedrooms: 4,
+      bathrooms: 3,
+      floor: "bajo",
+      hasElevator: false,
+      condition: "buen-estado",
+      constructionPeriod: "2006-2015",
+      extras: {
+        garage: true,
+        terrace: true,
+        storage: true,
+      },
+    },
+  },
 ];
 
 function formatCurrency(value: number) {

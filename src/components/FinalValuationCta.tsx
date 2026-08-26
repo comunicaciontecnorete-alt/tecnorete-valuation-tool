@@ -4,12 +4,16 @@ type FinalValuationCtaProps = {
   zoneName: string;
   title: string;
   text: string;
+  actionHref?: string;
+  actionLabel?: string;
 };
 
 export function FinalValuationCta({
   zoneName,
   title,
   text,
+  actionHref = "#calculadora-valoracion",
+  actionLabel = "Valorar mi vivienda",
 }: FinalValuationCtaProps) {
   return (
     <section className="overflow-hidden rounded-3xl bg-[#033b79] p-6 text-white shadow-sm md:p-10">
@@ -34,10 +38,10 @@ export function FinalValuationCta({
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
-            href="#calculadora-valoracion"
+            href={actionHref}
             className="inline-flex items-center justify-center rounded-2xl bg-[#ec8a36] px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-px hover:opacity-90 active:scale-[0.98]"
           >
-            Valorar mi vivienda
+            {actionLabel}
           </a>
 
           {siteConfig.offices.map((office) => (

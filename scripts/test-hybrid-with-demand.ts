@@ -75,9 +75,9 @@ const cases: TestCase[] = [
   },
 
   {
-    name: "Dúplex Toledo Sur",
+    name: "Dúplex Buenavista",
     input: {
-      zoneSlug: "toledo-sur",
+      zoneSlug: "buenavista",
       street: "Calle de prueba",
       streetNumber: "1",
       propertyType: "duplex",

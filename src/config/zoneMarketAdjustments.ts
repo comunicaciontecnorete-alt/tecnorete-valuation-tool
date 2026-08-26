@@ -5,6 +5,9 @@ export type ZoneMarketAdjustment = {
 
 const APARTMENT_REFERENCE = 1437.5;
 
+/** Base real de pisos del informe actual, solo para las nuevas subzonas. */
+const CURRENT_APARTMENT_MARKET_BASE = 1578;
+
 /**
  * Referencia del primer informe dinámico utilizado
  * para construir el índice local provisional de casas.
@@ -31,6 +34,21 @@ export const zoneMarketAdjustments: Record<
   "toledo-sur": {
     apartment: 1450 / APARTMENT_REFERENCE,
     house: 1450 / HOUSE_REFERENCE,
+  },
+
+  buenavista: {
+    apartment: 2000 / CURRENT_APARTMENT_MARKET_BASE,
+    house: 1,
+  },
+
+  "la-legua": {
+    apartment: 1,
+    house: 1600 / HOUSE_REFERENCE,
+  },
+
+  valparaiso: {
+    apartment: 1,
+    house: 1800 / HOUSE_REFERENCE,
   },
 
   azucaica: {

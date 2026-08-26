@@ -76,9 +76,9 @@ const cases: TestCase[] = [
   },
 
   {
-    name: "Dúplex Toledo Sur",
+    name: "Dúplex Buenavista",
     input: {
-      zoneSlug: "toledo-sur",
+      zoneSlug: "buenavista",
       street: "Calle de prueba",
       streetNumber: "1",
       propertyType: "duplex",
@@ -195,18 +195,14 @@ for (const testCase of cases) {
   );
 
   if (isHouse) {
-    if (
-      hybrid.adjustedPrice !== v1.adjustedPrice ||
-      hybrid.minPrice !== v1.minPrice ||
-      hybrid.maxPrice !== v1.maxPrice
-    ) {
+    if (hybrid.valuationEngine !== "v2-house") {
       throw new Error(
-        `ERROR: ${testCase.name} debería seguir usando exactamente la V1.`
+        `ERROR: ${testCase.name} debería usar la lógica V2 de casas.`
       );
     }
 
     console.log(
-      "✓ Casa/chalet protegido: mantiene exactamente V1"
+      "✓ Casa/chalet: utiliza la lógica V2 de casas"
     );
   } else {
     console.log(

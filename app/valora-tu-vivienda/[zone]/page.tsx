@@ -1,6 +1,11 @@
 import { ValuationForm } from "@/components/ValuationForm";
 import { notFound } from "next/navigation";
-import { getZoneBySlug, zones } from "@/config/zones";
+import Link from "next/link";
+import {
+  getChildZones,
+  getZoneBySlug,
+  zones,
+} from "@/config/zones";
 import { getZoneSeoContent } from "@/config/zoneSeoContent";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
@@ -92,6 +97,7 @@ export default async function ZoneValuationPage({
   }
 
   const seoContent = getZoneSeoContent(zone.slug);
+  const childZones = getChildZones(zone.slug);
 
   return (
     <>
@@ -152,9 +158,55 @@ export default async function ZoneValuationPage({
         </MotionReveal>
 
         <MotionReveal delay={0.12} y={16} duration={0.55}>
-          <div id="calculadora-valoracion">
-            <ValuationForm initialZoneSlug={zone.slug} />
-          </div>
+          {zone.valuationEnabled === false ? (
+            <section
+              id="subzonas-toledo-sur"
+              className="rounded-3xl border border-[#033b79]/10 bg-white p-6 shadow-sm md:p-8"
+            >
+              <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
+                Toledo Sur
+              </p>
+
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-[#033b79]">
+                ¿Dónde está tu vivienda?
+              </h2>
+
+              <p className="mt-4 text-sm leading-6 text-slate-600">
+                Selecciona la subzona para utilizar su referencia de valoración específica.
+              </p>
+
+              <div className="mt-6 grid gap-4">
+                {childZones.map((childZone) => (
+                  <Link
+                    key={childZone.slug}
+                    href={`/valora-tu-vivienda/${childZone.slug}`}
+                    className="group rounded-2xl border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-0.5 hover:border-[#033b79]/25 hover:bg-white hover:shadow-sm"
+                  >
+                    <h3 className="text-xl font-bold text-[#033b79]">
+                      {childZone.name}
+                    </h3>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {childZone.subheadline}
+                    </p>
+
+                    <p className="mt-4 text-sm font-bold text-[#033b79]">
+                      Seleccionar subzona →
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : (
+            <div id="calculadora-valoracion">
+              <ValuationForm
+                initialZoneSlug={zone.slug}
+                allowedPropertyTypes={
+                  zone.allowedPropertyTypes
+                }
+              />
+            </div>
+          )}
         </MotionReveal>
       </section>
 
@@ -248,6 +300,16 @@ export default async function ZoneValuationPage({
               zoneName={zone.name}
               title={seoContent.ctaTitle}
               text={seoContent.ctaText}
+              actionHref={
+                zone.valuationEnabled === false
+                  ? "#subzonas-toledo-sur"
+                  : undefined
+              }
+              actionLabel={
+                zone.valuationEnabled === false
+                  ? "Elegir subzona"
+                  : undefined
+              }
             />
           </MotionReveal>
         </div>

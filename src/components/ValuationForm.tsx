@@ -18,6 +18,7 @@ import type { HybridValuationResult } from "@/lib/calculateValuationHybrid";
 
 type ValuationFormProps = {
   initialZoneSlug: string;
+  allowedPropertyTypes?: PropertyType[];
 };
 
 type ContactData = {
@@ -135,13 +136,25 @@ function formatCurrency(value: number) {
 
 export function ValuationForm({
   initialZoneSlug,
+  allowedPropertyTypes,
 }: ValuationFormProps) {
+  const availablePropertyTypeOptions =
+    allowedPropertyTypes
+      ? propertyTypeOptions.filter((option) =>
+          allowedPropertyTypes.includes(option.value)
+        )
+      : propertyTypeOptions;
+
+  const initialPropertyType =
+    availablePropertyTypeOptions[0]?.value ?? "piso";
+
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] =
     useState<ValuationInput>({
       ...initialFormData,
       zoneSlug: initialZoneSlug,
+      propertyType: initialPropertyType,
     });
 
   const [contactData, setContactData] =
@@ -408,7 +421,7 @@ export function ValuationForm({
                 }}
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
               >
-                {propertyTypeOptions.map(
+                {availablePropertyTypeOptions.map(
                   (option) => (
                     <option
                       key={option.value}
@@ -1100,6 +1113,8 @@ export function ValuationForm({
           ...initialFormData,
           zoneSlug:
             initialZoneSlug,
+          propertyType:
+            initialPropertyType,
         });
       }}
       className="rounded-full bg-[#ec8a36] px-6 py-3 text-center text-sm font-bold text-white transition hover:opacity-90"
