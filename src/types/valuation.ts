@@ -36,6 +36,8 @@ export type PropertyExtras = {
 
 export type ValuationInput = {
   zoneSlug: string;
+  street: string;
+  streetNumber: string;
   propertyType: PropertyType;
   squareMeters: number;
   bedrooms: number;

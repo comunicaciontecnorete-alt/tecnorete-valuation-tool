@@ -1,0 +1,19 @@
+warning: in the working copy of 'app/api/lead/route.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/compare-house-valuations.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/compare-hybrid.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/compare-valuations.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/test-house-subtypes-hybrid.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/test-house-v2-matrix.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/test-hybrid-with-demand.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/ValuationForm.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/types/valuation.ts', LF will be replaced by CRLF the next time Git touches it
+ app/api/lead/route.ts                 | 184 [32m+++++++++++++++++++++++++++[m[31m-------[m
+ scripts/compare-house-valuations.ts   |  18 [32m+++[m[31m-[m
+ scripts/compare-hybrid.ts             |  14 [32m++[m[31m-[m
+ scripts/compare-valuations.ts         |  14 [32m++[m[31m-[m
+ scripts/test-house-subtypes-hybrid.ts |   4 [32m+[m[31m-[m
+ scripts/test-house-v2-matrix.ts       |   4 [32m+[m[31m-[m
+ scripts/test-hybrid-with-demand.ts    |  14 [32m++[m[31m-[m
+ src/components/ValuationForm.tsx      |  97 [32m+++++++++++++++++[m[31m-[m
+ src/types/valuation.ts                |   4 [32m+[m[31m-[m
+ 9 files changed, 306 insertions(+), 47 deletions(-)

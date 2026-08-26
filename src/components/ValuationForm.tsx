@@ -99,6 +99,8 @@ const constructionPeriodOptions: {
 
 const initialFormData: ValuationInput = {
   zoneSlug: "",
+  street: "",
+  streetNumber: "",
   propertyType: "piso",
   houseSubtype: "unknown",
   squareMeters: 90,
@@ -166,6 +168,19 @@ export function ValuationForm({
   async function goNext() {
     setError("");
 
+    if (step === 1 && !formData.street.trim()) {
+      setError("Indica la calle de la vivienda.");
+      return;
+    }
+
+    if (
+      step === 1 &&
+      !formData.streetNumber.trim()
+    ) {
+      setError("Indica el número de la vivienda.");
+      return;
+    }
+
     if (
       step === 1 &&
       formData.squareMeters <= 0
@@ -202,6 +217,15 @@ export function ValuationForm({
       try {
         setIsSubmitting(true);
 
+        const normalizedFormData = {
+          ...formData,
+          street: formData.street.trim(),
+          streetNumber:
+            formData.streetNumber.trim(),
+        };
+
+        setFormData(normalizedFormData);
+
         const response = await fetch(
           "/api/lead",
           {
@@ -211,7 +235,7 @@ export function ValuationForm({
                 "application/json",
             },
             body: JSON.stringify({
-              valuation: formData,
+              valuation: normalizedFormData,
               contact: contactData,
               sourceUrl:
                 typeof window !== "undefined"
@@ -293,6 +317,68 @@ export function ValuationForm({
           </h2>
 
           <div className="mt-6 space-y-5">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+              <p className="text-sm font-bold text-[#033b79]">
+                Dirección de la vivienda
+              </p>
+
+              <div className="mt-4 grid gap-4 md:grid-cols-[minmax(0,3fr)_minmax(8rem,1fr)]">
+                <div>
+                  <label
+                    htmlFor="valuation-street"
+                    className="text-sm font-semibold text-slate-700"
+                  >
+                    Calle
+                  </label>
+
+                  <input
+                    id="valuation-street"
+                    type="text"
+                    required
+                    maxLength={120}
+                    placeholder="Río Alberche"
+                    autoComplete="address-line1"
+                    value={formData.street}
+                    onChange={(event) =>
+                      setFormData({
+                        ...formData,
+                        street: event.target.value,
+                      })
+                    }
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="valuation-street-number"
+                    className="text-sm font-semibold text-slate-700"
+                  >
+                    Número
+                  </label>
+
+                  <input
+                    id="valuation-street-number"
+                    type="text"
+                    required
+                    maxLength={20}
+                    placeholder="3"
+                    value={
+                      formData.streetNumber
+                    }
+                    onChange={(event) =>
+                      setFormData({
+                        ...formData,
+                        streetNumber:
+                          event.target.value,
+                      })
+                    }
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#033b79]"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="text-sm font-semibold text-slate-700">
                 Tipo de inmueble
@@ -854,8 +940,13 @@ export function ValuationForm({
           </h2>
 
           <div className="mt-6 rounded-3xl bg-[#033b79] p-6 text-white">
-            <p className="text-sm opacity-80">
-              {result.zoneName} · CP{" "}
+            <p className="text-sm font-semibold">
+              {formData.street},{" "}
+              {formData.streetNumber}
+            </p>
+
+            <p className="mt-1 text-sm opacity-80">
+              {result.zoneName}, Toledo · CP{" "}
               {result.postalCode}
             </p>
 

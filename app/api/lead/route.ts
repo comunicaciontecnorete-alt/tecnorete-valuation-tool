@@ -39,6 +39,15 @@ function yesNo(value: boolean) {
   return value ? "Sí" : "No";
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 async function sendLeadToSheets(payload: unknown) {
   const webhookUrl = process.env.MAKE_WEBHOOK_URL;
 
@@ -108,7 +117,86 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { contact, valuation, sourceUrl } = body;
+    const {
+      contact,
+      valuation: submittedValuation,
+      sourceUrl,
+    } = body;
+
+    if (typeof submittedValuation.street !== "string") {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La calle de la vivienda es obligatoria.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof submittedValuation.streetNumber !==
+      "string"
+    ) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El número de la vivienda es obligatorio.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const street = submittedValuation.street.trim();
+    const streetNumber =
+      submittedValuation.streetNumber.trim();
+
+    if (!street) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La calle de la vivienda es obligatoria.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!streetNumber) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El número de la vivienda es obligatorio.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (street.length > 120) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "La calle no puede superar los 120 caracteres.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (streetNumber.length > 20) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "El número no puede superar los 20 caracteres.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const normalizedValuation: ValuationInput = {
+      ...submittedValuation,
+      street,
+      streetNumber,
+    };
 
     if (!contact.name?.trim()) {
       return NextResponse.json(
@@ -159,19 +247,21 @@ export async function POST(request: NextRequest) {
  * casa / chalet
  * → V2 específica de casas
  */
-    const result = calculateValuationHybrid(valuation);
+    const result = calculateValuationHybrid(
+      normalizedValuation
+    );
 
     const lead = {
       createdAt: new Date().toISOString(),
       sourceUrl: sourceUrl ?? null,
       priority: contact.wantsToSell,
       contact,
-      property: valuation,
+      property: normalizedValuation,
       valuationResult: result,
     };
 const isHouse =
-  valuation.propertyType === "casa" ||
-  valuation.propertyType === "chalet";
+  normalizedValuation.propertyType === "casa" ||
+  normalizedValuation.propertyType === "chalet";
 
 const demandData =
   result.valuationEngine === "v2-apartment"
@@ -201,46 +291,49 @@ const sheetsLead = {
 
   zone: result.zoneName,
   postalCode: result.postalCode,
+  street: normalizedValuation.street,
+  streetNumber:
+    normalizedValuation.streetNumber,
 
   propertyType:
-    valuation.propertyType,
+    normalizedValuation.propertyType,
 
   houseSubtype: isHouse
-    ? valuation.houseSubtype ??
+    ? normalizedValuation.houseSubtype ??
       "unknown"
     : "",
 
   squareMeters:
-    valuation.squareMeters,
+    normalizedValuation.squareMeters,
 
-  bedrooms: valuation.bedrooms,
-  bathrooms: valuation.bathrooms,
+  bedrooms: normalizedValuation.bedrooms,
+  bathrooms: normalizedValuation.bathrooms,
 
-  condition: valuation.condition,
+  condition: normalizedValuation.condition,
 
   constructionPeriod:
-    valuation.constructionPeriod,
+    normalizedValuation.constructionPeriod,
 
   floor: isHouse
     ? ""
-    : valuation.floor,
+    : normalizedValuation.floor,
 
   hasElevator: isHouse
     ? ""
     : yesNo(
-        valuation.hasElevator
+        normalizedValuation.hasElevator
       ),
 
   garage: yesNo(
-    valuation.extras.garage
+    normalizedValuation.extras.garage
   ),
 
   terrace: yesNo(
-    valuation.extras.terrace
+    normalizedValuation.extras.terrace
   ),
 
   storage: yesNo(
-    valuation.extras.storage
+    normalizedValuation.extras.storage
   ),
 
   minPrice: result.minPrice,
@@ -346,17 +439,24 @@ const sheetsLead = {
     `;
 
 const houseSubtypeLabel =
-  valuation.houseSubtype === "attached"
+  normalizedValuation.houseSubtype === "attached"
     ? "Adosada"
-    : valuation.houseSubtype === "detached"
+    : normalizedValuation.houseSubtype === "detached"
       ? "Independiente"
-      : valuation.houseSubtype === "semiDetached"
+      : normalizedValuation.houseSubtype === "semiDetached"
         ? "Pareada"
-        : valuation.houseSubtype === "singleFamily"
+        : normalizedValuation.houseSubtype === "singleFamily"
           ? "Unifamiliar"
-          : valuation.houseSubtype === "unknown"
+          : normalizedValuation.houseSubtype === "unknown"
             ? "No especificado"
             : null;
+
+    const escapedStreet = escapeHtml(
+      normalizedValuation.street
+    );
+    const escapedStreetNumber = escapeHtml(
+      normalizedValuation.streetNumber
+    );
 
     const html = `
       <div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.5;">
@@ -418,8 +518,18 @@ const houseSubtypeLabel =
         </p>
 
         <p>
+          <strong>Calle:</strong>
+          ${escapedStreet}
+        </p>
+
+        <p>
+          <strong>Número:</strong>
+          ${escapedStreetNumber}
+        </p>
+
+        <p>
           <strong>Tipo:</strong>
-          ${valuation.propertyType}
+          ${normalizedValuation.propertyType}
         </p>
         ${
   houseSubtypeLabel
@@ -434,32 +544,32 @@ const houseSubtypeLabel =
 
         <p>
           <strong>Metros:</strong>
-          ${valuation.squareMeters} m²
+          ${normalizedValuation.squareMeters} m²
         </p>
 
         <p>
           <strong>Habitaciones:</strong>
-          ${valuation.bedrooms}
+          ${normalizedValuation.bedrooms}
         </p>
 
         <p>
           <strong>Baños:</strong>
-          ${valuation.bathrooms}
+          ${normalizedValuation.bathrooms}
         </p>
 
         ${
-  valuation.propertyType === "piso" ||
-  valuation.propertyType === "atico" ||
-  valuation.propertyType === "duplex"
+  normalizedValuation.propertyType === "piso" ||
+  normalizedValuation.propertyType === "atico" ||
+  normalizedValuation.propertyType === "duplex"
     ? `
       <p>
         <strong>Planta:</strong>
-        ${valuation.floor}
+        ${normalizedValuation.floor}
       </p>
 
       <p>
         <strong>Ascensor:</strong>
-        ${yesNo(valuation.hasElevator)}
+        ${yesNo(normalizedValuation.hasElevator)}
       </p>
     `
     : ""
@@ -467,27 +577,27 @@ const houseSubtypeLabel =
 
         <p>
           <strong>Estado:</strong>
-          ${valuation.condition}
+          ${normalizedValuation.condition}
         </p>
 
         <p>
           <strong>Año/tramo:</strong>
-          ${valuation.constructionPeriod}
+          ${normalizedValuation.constructionPeriod}
         </p>
 
         <p>
           <strong>Garaje:</strong>
-          ${yesNo(valuation.extras.garage)}
+          ${yesNo(normalizedValuation.extras.garage)}
         </p>
 
         <p>
           <strong>Terraza:</strong>
-          ${yesNo(valuation.extras.terrace)}
+          ${yesNo(normalizedValuation.extras.terrace)}
         </p>
 
         <p>
           <strong>Trastero:</strong>
-          ${yesNo(valuation.extras.storage)}
+          ${yesNo(normalizedValuation.extras.storage)}
         </p>
 
 

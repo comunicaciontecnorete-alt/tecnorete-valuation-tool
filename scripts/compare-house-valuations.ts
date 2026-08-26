@@ -18,6 +18,8 @@ const cases: HouseTestCase[] = [
     subtype: "unknown",
     input: {
       zoneSlug: "arges",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 140,
       bedrooms: 3,
@@ -39,6 +41,8 @@ const cases: HouseTestCase[] = [
     subtype: "attached",
     input: {
       zoneSlug: "arges",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 140,
       bedrooms: 3,
@@ -60,6 +64,8 @@ const cases: HouseTestCase[] = [
     subtype: "semiDetached",
     input: {
       zoneSlug: "arges",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 140,
       bedrooms: 3,
@@ -81,6 +87,8 @@ const cases: HouseTestCase[] = [
     subtype: "detached",
     input: {
       zoneSlug: "layos",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "chalet",
       squareMeters: 180,
       bedrooms: 4,
@@ -102,6 +110,8 @@ const cases: HouseTestCase[] = [
     subtype: "semiDetached",
     input: {
       zoneSlug: "layos",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "chalet",
       squareMeters: 180,
       bedrooms: 4,
@@ -123,6 +133,8 @@ const cases: HouseTestCase[] = [
     subtype: "attached",
     input: {
       zoneSlug: "polan",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 120,
       bedrooms: 3,
@@ -144,6 +156,8 @@ const cases: HouseTestCase[] = [
     subtype: "detached",
     input: {
       zoneSlug: "nambroca",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 160,
       bedrooms: 4,
@@ -165,6 +179,8 @@ const cases: HouseTestCase[] = [
     subtype: "unknown",
     input: {
       zoneSlug: "arges",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 65,
       bedrooms: 2,

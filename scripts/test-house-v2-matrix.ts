@@ -10,6 +10,8 @@ import type {
 
 const baseInput: ValuationInput = {
   zoneSlug: "arges",
+  street: "Calle de prueba",
+  streetNumber: "1",
   propertyType: "casa",
   squareMeters: 140,
   bedrooms: 3,

@@ -17,6 +17,8 @@ const cases: ComparisonCase[] = [
     name: "Piso Santa Teresa",
     input: {
       zoneSlug: "santa-teresa",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "piso",
       squareMeters: 90,
       bedrooms: 3,
@@ -37,6 +39,8 @@ const cases: ComparisonCase[] = [
     name: "Piso Polán a reformar",
     input: {
       zoneSlug: "polan",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "piso",
       squareMeters: 80,
       bedrooms: 2,
@@ -57,6 +61,8 @@ const cases: ComparisonCase[] = [
     name: "Ático Benquerencia reformado",
     input: {
       zoneSlug: "santa-maria-de-benquerencia",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "atico",
       squareMeters: 85,
       bedrooms: 2,
@@ -77,6 +83,8 @@ const cases: ComparisonCase[] = [
     name: "Dúplex Toledo Sur",
     input: {
       zoneSlug: "toledo-sur",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "duplex",
       squareMeters: 110,
       bedrooms: 3,
@@ -97,6 +105,8 @@ const cases: ComparisonCase[] = [
     name: "Casa Argés",
     input: {
       zoneSlug: "arges",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "casa",
       squareMeters: 140,
       bedrooms: 3,
@@ -117,6 +127,8 @@ const cases: ComparisonCase[] = [
     name: "Chalet Layos",
     input: {
       zoneSlug: "layos",
+      street: "Calle de prueba",
+      streetNumber: "1",
       propertyType: "chalet",
       squareMeters: 180,
       bedrooms: 4,
