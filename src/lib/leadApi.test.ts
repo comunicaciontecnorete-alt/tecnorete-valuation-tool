@@ -70,6 +70,17 @@ test("serializa por allowlist únicamente los datos que consume la UI", () => {
     },
     addressMatched: true,
     referenceId: "internal-reference",
+    observedPricePerSqm: 2200,
+    observedSalePrice: 198000,
+    daysToBuyer: 12,
+    knownFeatures: {
+      hasElevator: true,
+      garage: true,
+      storage: false,
+    },
+    comparableMetadata: {
+      street: "Calle interna",
+    },
     propertyFamily: "apartment",
     valuationEngine: "v2-apartment",
     demandLabel: "Alta",
@@ -100,6 +111,11 @@ test("serializa por allowlist únicamente los datos que consume la UI", () => {
   assert.equal("pricingReference" in publicResult, false);
   assert.equal("addressMatched" in publicResult, false);
   assert.equal("referenceId" in publicResult, false);
+  assert.equal("observedPricePerSqm" in publicResult, false);
+  assert.equal("observedSalePrice" in publicResult, false);
+  assert.equal("daysToBuyer" in publicResult, false);
+  assert.equal("knownFeatures" in publicResult, false);
+  assert.equal("comparableMetadata" in publicResult, false);
   assert.equal("appliedCoefficients" in publicResult, false);
   assert.equal("coeficientes" in publicResult, false);
   assert.equal("localizedPricePerSqm" in publicResult, false);

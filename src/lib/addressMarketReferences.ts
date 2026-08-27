@@ -21,6 +21,14 @@ export type AddressMarketReference = {
   referenceDate?: string;
   confidence?: AddressReferenceConfidence;
   notes?: string;
+  observedPricePerSqm?: number;
+  observedSalePrice?: number;
+  daysToBuyer?: number;
+  knownFeatures?: {
+    hasElevator?: boolean;
+    garage?: boolean;
+    storage?: boolean;
+  };
 };
 
 export type AddressReferenceLookup = {
@@ -150,6 +158,57 @@ function assertOptionalString(
   }
 }
 
+function assertOptionalPositiveNumber(
+  value: unknown,
+  field: string
+): asserts value is number | undefined {
+  if (
+    value !== undefined &&
+    (typeof value !== "number" ||
+      !Number.isFinite(value) ||
+      value <= 0)
+  ) {
+    throw new Error(
+      `Referencia por dirección inválida: "${field}" debe ser un número positivo.`
+    );
+  }
+}
+
+function assertOptionalKnownFeatures(
+  value: unknown
+): asserts value is AddressMarketReference["knownFeatures"] {
+  if (value === undefined) {
+    return;
+  }
+
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value)
+  ) {
+    throw new Error(
+      'Referencia por dirección inválida: "knownFeatures" debe ser un objeto.'
+    );
+  }
+
+  const knownFeatures = value as Record<string, unknown>;
+
+  for (const field of [
+    "hasElevator",
+    "garage",
+    "storage",
+  ] as const) {
+    if (
+      knownFeatures[field] !== undefined &&
+      typeof knownFeatures[field] !== "boolean"
+    ) {
+      throw new Error(
+        `Referencia por dirección inválida: "knownFeatures.${field}" debe ser booleano.`
+      );
+    }
+  }
+}
+
 function parseAddressMarketReferences(
   value: unknown
 ): readonly AddressMarketReference[] {
@@ -216,6 +275,19 @@ function parseAddressMarketReferences(
     assertOptionalString(reference.source, "source");
     assertOptionalString(reference.referenceDate, "referenceDate");
     assertOptionalString(reference.notes, "notes");
+    assertOptionalPositiveNumber(
+      reference.observedPricePerSqm,
+      "observedPricePerSqm"
+    );
+    assertOptionalPositiveNumber(
+      reference.observedSalePrice,
+      "observedSalePrice"
+    );
+    assertOptionalPositiveNumber(
+      reference.daysToBuyer,
+      "daysToBuyer"
+    );
+    assertOptionalKnownFeatures(reference.knownFeatures);
 
     if (
       reference.confidence !== undefined &&

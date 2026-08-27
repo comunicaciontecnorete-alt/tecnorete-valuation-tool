@@ -17,6 +17,45 @@ import type { ValuationInput } from "@/types/valuation";
 
 const zoneSlug = "santa-maria-de-benquerencia";
 
+const productionReferenceCases = [
+  {
+    street: "Calle Lagunas de Ruidera",
+    normalizedStreet: "Lagunas de Ruidera",
+    streetNumber: "1",
+    pricePerSqm: 2009,
+  },
+  {
+    street: "Calle Río Estenilla",
+    normalizedStreet: "Rio Estenilla",
+    streetNumber: "15",
+    pricePerSqm: 2031,
+  },
+  {
+    street: "Calle Río Fresnedoso",
+    normalizedStreet: "Rio Fresnedoso",
+    streetNumber: "28",
+    pricePerSqm: 1887,
+  },
+  {
+    street: "Calle Río Guadarrama",
+    normalizedStreet: "Rio Guadarrama",
+    streetNumber: "36",
+    pricePerSqm: 2670,
+  },
+  {
+    street: "Calle Río Valdemarías",
+    normalizedStreet: "Rio Valdemarias",
+    streetNumber: "34",
+    pricePerSqm: 1951,
+  },
+  {
+    street: "Calle Río Cigüela",
+    normalizedStreet: "Rio Ciguela",
+    streetNumber: "7",
+    pricePerSqm: 1660,
+  },
+] as const;
+
 const apartmentReference: AddressMarketReference = {
   zoneSlug,
   street: "Calle Río Cigüela",
@@ -287,8 +326,251 @@ test("el motor de casas utiliza solo una referencia house exacta", () => {
   assert.equal(result.pricingReference.source, "address");
 });
 
-test("el dataset productivo vacío conserva el resultado previo del motor", () => {
-  assert.deepEqual(addressMarketReferences, []);
+test("el dataset productivo contiene solo las seis operaciones auditadas", () => {
+  assert.equal(addressMarketReferences.length, 6);
+
+  assert.deepEqual(
+    addressMarketReferences.map(
+      ({
+        street,
+        streetNumber,
+        propertyCategory,
+        pricePerSqm,
+        observedPricePerSqm,
+        observedSalePrice,
+        daysToBuyer,
+        knownFeatures,
+      }) => ({
+        street,
+        streetNumber,
+        propertyCategory,
+        pricePerSqm,
+        observedPricePerSqm,
+        observedSalePrice,
+        daysToBuyer,
+        knownFeatures,
+      })
+    ),
+    [
+      {
+        street: "Calle Lagunas de Ruidera",
+        streetNumber: "1",
+        propertyCategory: "apartment",
+        pricePerSqm: 2009,
+        observedPricePerSqm: 2214,
+        observedSalePrice: 214900,
+        daysToBuyer: 15,
+        knownFeatures: {
+          hasElevator: true,
+          garage: true,
+          storage: true,
+        },
+      },
+      {
+        street: "Calle Río Estenilla",
+        streetNumber: "15",
+        propertyCategory: "apartment",
+        pricePerSqm: 2031,
+        observedPricePerSqm: 2238,
+        observedSalePrice: 235000,
+        daysToBuyer: 5,
+        knownFeatures: {
+          hasElevator: true,
+          garage: true,
+          storage: true,
+        },
+      },
+      {
+        street: "Calle Río Fresnedoso",
+        streetNumber: "28",
+        propertyCategory: "apartment",
+        pricePerSqm: 1887,
+        observedPricePerSqm: 1944,
+        observedSalePrice: 175000,
+        daysToBuyer: 40,
+        knownFeatures: {
+          hasElevator: true,
+          garage: false,
+          storage: false,
+        },
+      },
+      {
+        street: "Calle Río Guadarrama",
+        streetNumber: "36",
+        propertyCategory: "apartment",
+        pricePerSqm: 2670,
+        observedPricePerSqm: 2888,
+        observedSalePrice: 260000,
+        daysToBuyer: 7,
+        knownFeatures: {
+          hasElevator: true,
+          garage: true,
+          storage: false,
+        },
+      },
+      {
+        street: "Calle Río Valdemarías",
+        streetNumber: "34",
+        propertyCategory: "apartment",
+        pricePerSqm: 1951,
+        observedPricePerSqm: 2110,
+        observedSalePrice: 189900,
+        daysToBuyer: 7,
+        knownFeatures: {
+          hasElevator: true,
+          garage: true,
+          storage: false,
+        },
+      },
+      {
+        street: "Calle Río Cigüela",
+        streetNumber: "7",
+        propertyCategory: "apartment",
+        pricePerSqm: 1660,
+        observedPricePerSqm: 1610,
+        observedSalePrice: 135000,
+        daysToBuyer: 30,
+        knownFeatures: {
+          hasElevator: false,
+          garage: false,
+          storage: false,
+        },
+      },
+    ]
+  );
+});
+
+test("las seis direcciones productivas aceptan variantes normalizadas", () => {
+  for (const reference of productionReferenceCases) {
+    const variants = [
+      reference.street,
+      reference.normalizedStreet,
+      `C/ ${reference.street.replace(/^Calle /, "")}`,
+    ];
+
+    for (const street of variants) {
+      const result = findAddressMarketReference({
+        zoneSlug,
+        street,
+        streetNumber: reference.streetNumber,
+        propertyCategory: "apartment",
+      });
+
+      assert.equal(result.matched, true, street);
+      assert.equal(
+        result.matched && result.pricePerSqm,
+        reference.pricePerSqm,
+        street
+      );
+    }
+  }
+});
+
+test("las referencias productivas exigen número, categoría y zona exactos", () => {
+  for (const reference of productionReferenceCases) {
+    assert.equal(
+      findAddressMarketReference({
+        zoneSlug,
+        street: reference.street,
+        streetNumber: `${Number(reference.streetNumber) + 1}`,
+        propertyCategory: "apartment",
+      }).matched,
+      false
+    );
+
+    assert.equal(
+      findAddressMarketReference({
+        zoneSlug,
+        street: reference.street,
+        streetNumber: reference.streetNumber,
+        propertyCategory: "house",
+      }).matched,
+      false
+    );
+
+    assert.equal(
+      findAddressMarketReference({
+        zoneSlug: "santa-teresa",
+        street: reference.street,
+        streetNumber: reference.streetNumber,
+        propertyCategory: "apartment",
+      }).matched,
+      false
+    );
+  }
+});
+
+test("Río Cigüela 7 reaplica características sin doble ajuste territorial", () => {
+  const result = calculateValuationV2(
+    createApartmentInput({
+      street: "C/ Río Cigüela",
+      streetNumber: "7",
+      hasElevator: false,
+      extras: {
+        garage: false,
+        terrace: false,
+        storage: false,
+      },
+    })
+  );
+
+  assert.equal(result.localizedPricePerSqm, 1660);
+  assert.equal(result.pricingReference.source, "address");
+  assert.equal(result.pricingReference.addressMatched, true);
+  assert.equal(
+    result.appliedCoefficients.some(
+      ({ label }) => label === "Ajuste local de zona"
+    ),
+    false
+  );
+  assert.equal(
+    result.appliedCoefficients.find(
+      ({ label }) => label === "Ascensor"
+    )?.value,
+    0.97
+  );
+  assert.ok(
+    Math.abs(result.adjustedPrice / 100 - 1610) <= 1
+  );
+});
+
+test("una dirección desconocida usa el fallback recalibrado de pisos", () => {
+  const result = calculateValuationV2(
+    createApartmentInput({
+      street: "Calle Río Inventado",
+      streetNumber: "99",
+    })
+  );
+
+  assert.equal(result.localizedPricePerSqm, 2000);
+  assert.equal(result.basePrice, 200000);
+  assert.equal(result.pricingReference.source, "zone");
+  assert.equal(result.pricingReference.addressMatched, false);
+  assert.equal(
+    result.appliedCoefficients.some(
+      ({ label }) => label === "Ajuste local de zona"
+    ),
+    true
+  );
+});
+
+test("el fallback de casas de Benquerencia permanece en 1350 €/m²", () => {
+  const result = calculateHouseValuationV2(
+    createApartmentInput({
+      street: "Calle Río Inventado",
+      streetNumber: "99",
+      propertyType: "casa",
+      floor: "bajo",
+      hasElevator: false,
+    }),
+    "unknown"
+  );
+
+  assert.equal(result.localizedPricePerSqm, 1350);
+  assert.equal(result.pricingReference.source, "zone");
+});
+
+test("el fallback productivo recalibrado conserva el resto del cálculo", () => {
 
   const result = calculateValuationV2(
     createApartmentInput({
@@ -306,11 +588,11 @@ test("el dataset productivo vacío conserva el resultado previo del motor", () =
     })
   );
 
-  assert.equal(result.localizedPricePerSqm, 1482);
-  assert.equal(result.basePrice, 125966);
-  assert.equal(result.adjustedPrice, 163275);
-  assert.equal(result.minPrice, 152000);
-  assert.equal(result.maxPrice, 175000);
+  assert.equal(result.localizedPricePerSqm, 2000);
+  assert.equal(result.basePrice, 170000);
+  assert.equal(result.adjustedPrice, 220351);
+  assert.equal(result.minPrice, 205000);
+  assert.equal(result.maxPrice, 236000);
   assert.equal(result.pricingReference.source, "zone");
   assert.equal(result.pricingReference.addressMatched, false);
 });

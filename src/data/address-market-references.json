@@ -1,1 +1,110 @@
-[]
+[
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Lagunas de Ruidera",
+    "streetNumber": "1",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 2009,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-lagunas-de-ruidera-1",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 2214,
+    "observedSalePrice": 214900,
+    "daysToBuyer": 15,
+    "knownFeatures": {
+      "hasElevator": true,
+      "garage": true,
+      "storage": true
+    }
+  },
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Río Estenilla",
+    "streetNumber": "15",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 2031,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-rio-estenilla-15",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 2238,
+    "observedSalePrice": 235000,
+    "daysToBuyer": 5,
+    "knownFeatures": {
+      "hasElevator": true,
+      "garage": true,
+      "storage": true
+    }
+  },
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Río Fresnedoso",
+    "streetNumber": "28",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 1887,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-rio-fresnedoso-28",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 1944,
+    "observedSalePrice": 175000,
+    "daysToBuyer": 40,
+    "knownFeatures": {
+      "hasElevator": true,
+      "garage": false,
+      "storage": false
+    }
+  },
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Río Guadarrama",
+    "streetNumber": "36",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 2670,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-rio-guadarrama-36",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 2888,
+    "observedSalePrice": 260000,
+    "daysToBuyer": 7,
+    "knownFeatures": {
+      "hasElevator": true,
+      "garage": true,
+      "storage": false
+    }
+  },
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Río Valdemarías",
+    "streetNumber": "34",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 1951,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-rio-valdemarias-34",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 2110,
+    "observedSalePrice": 189900,
+    "daysToBuyer": 7,
+    "knownFeatures": {
+      "hasElevator": true,
+      "garage": true,
+      "storage": false
+    }
+  },
+  {
+    "zoneSlug": "santa-maria-de-benquerencia",
+    "street": "Calle Río Cigüela",
+    "streetNumber": "7",
+    "propertyCategory": "apartment",
+    "pricePerSqm": 1660,
+    "basis": "neutralized",
+    "referenceId": "tecnorete-rio-ciguela-7",
+    "source": "Tecnorete",
+    "observedPricePerSqm": 1610,
+    "observedSalePrice": 135000,
+    "daysToBuyer": 30,
+    "knownFeatures": {
+      "hasElevator": false,
+      "garage": false,
+      "storage": false
+    }
+  }
+]
