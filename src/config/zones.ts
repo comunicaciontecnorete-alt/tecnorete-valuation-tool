@@ -18,7 +18,7 @@ export const zones: Zone[] = [
     headline: "¿Cuánto vale tu vivienda en Santa Teresa?",
     subheadline:
       "Obtén una primera referencia de valor antes de vender tu vivienda.",
-    basePricePerSqm: 1700,
+    basePricePerSqm: 1900,
     heroImage: "/images/zones/santa-teresa.jpg",
   },
   {

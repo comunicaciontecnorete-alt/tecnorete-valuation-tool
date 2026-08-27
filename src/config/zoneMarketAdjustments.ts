@@ -5,7 +5,7 @@ export type ZoneMarketAdjustment = {
 
 const APARTMENT_REFERENCE = 1437.5;
 
-/** Base real de pisos del informe actual, solo para las nuevas subzonas. */
+/** Base real de pisos del informe actual usada para calibraciones locales V2. */
 const CURRENT_APARTMENT_MARKET_BASE = 1578;
 
 /**
@@ -27,7 +27,7 @@ export const zoneMarketAdjustments: Record<
   },
 
   "santa-teresa": {
-    apartment: 1700 / APARTMENT_REFERENCE,
+    apartment: 1900 / CURRENT_APARTMENT_MARKET_BASE,
     house: 1700 / HOUSE_REFERENCE,
   },
 
