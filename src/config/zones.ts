@@ -40,7 +40,7 @@ export const zones: Zone[] = [
     headline: "¿Cuánto vale tu vivienda en Buenavista?",
     subheadline: "Zona residencial con valoración específica.",
     basePricePerSqm: 2000,
-    heroImage: "/images/zones/toledo-sur.jpg",
+    heroImage: "/images/zones/buenavista.jpg",
   },
   {
     postalCode: "45005",
@@ -51,7 +51,7 @@ export const zones: Zone[] = [
     headline: "Calcula el valor de tu casa en La Legua",
     subheadline: "Vivienda unifamiliar.",
     basePricePerSqm: 1600,
-    heroImage: "/images/zones/toledo-sur.jpg",
+    heroImage: "/images/zones/la-legua.jpg",
   },
   {
     postalCode: "45005",
@@ -62,7 +62,7 @@ export const zones: Zone[] = [
     headline: "Calcula el valor de tu casa en Valparaíso",
     subheadline: "Vivienda unifamiliar.",
     basePricePerSqm: 1800,
-    heroImage: "/images/zones/toledo-sur.jpg",
+    heroImage: "/images/zones/valparaiso.jpg",
   },
   {
     postalCode: "45008",
