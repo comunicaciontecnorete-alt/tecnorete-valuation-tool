@@ -55,11 +55,13 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <p className="mt-2">
-              También podemos tratar datos relativos al inmueble, como código
-              postal o zona, tipo de inmueble, metros cuadrados construidos,
-              número de habitaciones, número de baños, planta, existencia de
-              ascensor, estado de conservación, año o tramo de construcción y
-              extras como garaje, terraza o trastero.
+              También podemos tratar la dirección del inmueble objeto de
+              valoración, específicamente la calle y el número, así como la zona
+              y el código postal, el tipo de inmueble, los metros cuadrados
+              construidos, el número de habitaciones, el número de baños, la
+              planta, la existencia de ascensor, el estado de conservación, el
+              año o tramo de construcción y extras como garaje, terraza o
+              trastero.
             </p>
 
             <p className="mt-2">

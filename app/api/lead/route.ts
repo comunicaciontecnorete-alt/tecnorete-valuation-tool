@@ -395,7 +395,6 @@ const sheetsLead = {
 };
 
     console.log("NUEVO LEAD TECNORETE TOLEDO");
-    console.log(JSON.stringify(lead, null, 2));
 
     const resendApiKey = process.env.RESEND_API_KEY;
     const leadEmailTo = process.env.LEAD_EMAIL_TO;
@@ -500,6 +499,12 @@ const houseSubtypeLabel =
     const escapedStreetNumber = escapeHtml(
       normalizedValuation.streetNumber
     );
+    const escapedContactName = escapeHtml(contact.name);
+    const escapedContactPhone = escapeHtml(contact.phone);
+    const escapedContactEmail = escapeHtml(contact.email);
+    const escapedSourceUrl = escapeHtml(
+      sourceUrl ?? "No disponible"
+    );
 
     const html = `
       <div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.5;">
@@ -529,17 +534,17 @@ const houseSubtypeLabel =
 
         <p>
           <strong>Nombre:</strong>
-          ${contact.name}
+          ${escapedContactName}
         </p>
 
         <p>
           <strong>Teléfono:</strong>
-          ${contact.phone}
+          ${escapedContactPhone}
         </p>
 
         <p>
           <strong>Email:</strong>
-          ${contact.email}
+          ${escapedContactEmail}
         </p>
 
         <p>
@@ -675,7 +680,7 @@ const houseSubtypeLabel =
 
         <p>
           <strong>URL:</strong>
-          ${sourceUrl ?? "No disponible"}
+          ${escapedSourceUrl}
         </p>
 
         <p>

@@ -45,7 +45,6 @@ export const siteConfig = {
     },
   ],
   legalEmail: "to002@tecnorete.es",
-  testLeadEmail: "danielglop@gmail.com",
   privacyPath: "/politica-privacidad",
   colors: {
     blue: "#033b79",
