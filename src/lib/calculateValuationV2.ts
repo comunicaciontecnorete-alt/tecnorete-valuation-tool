@@ -1,6 +1,12 @@
 import { valuationConfig } from "@/config/valuation";
 import { getZoneBySlug } from "@/config/zones";
 import { getZoneMarketAdjustment } from "@/config/zoneMarketAdjustments";
+import {
+  findAddressMarketReference,
+  type AddressMarketReference,
+  type AddressPropertyCategory,
+  type PricingReference,
+} from "@/lib/addressMarketReferences";
 import { getMarketData } from "@/lib/marketData";
 
 import type {
@@ -10,13 +16,18 @@ import type {
   ValuationResult,
 } from "@/types/valuation";
 
-type PropertyFamily = "apartment" | "house";
+type PropertyFamily = AddressPropertyCategory;
+
+export type CalculateValuationV2Options = {
+  addressReferences?: readonly AddressMarketReference[];
+};
 
 export type ValuationResultV2 = ValuationResult & {
   propertyFamily: PropertyFamily;
   marketBasePricePerSqm: number;
   zoneAdjustment: number;
   localizedPricePerSqm: number;
+  pricingReference: PricingReference;
 };
 
 function roundToNearest(value: number, nearest: number) {
@@ -65,7 +76,8 @@ function getPropertyTypeCoefficient(
 }
 
 export function calculateValuationV2(
-  input: ValuationInput
+  input: ValuationInput,
+  options: CalculateValuationV2Options = {}
 ): ValuationResultV2 {
   const zone = getZoneBySlug(input.zoneSlug);
 
@@ -109,8 +121,24 @@ export function calculateValuationV2(
       ? zoneAdjustment.apartment
       : zoneAdjustment.house;
 
-  const localizedPricePerSqm =
+  const zoneLocalizedPricePerSqm =
     marketBasePricePerSqm * localAdjustment;
+
+  const addressReference =
+    findAddressMarketReference(
+      {
+        zoneSlug: input.zoneSlug,
+        street: input.street,
+        streetNumber: input.streetNumber,
+        propertyCategory: propertyFamily,
+      },
+      options.addressReferences
+    );
+
+  const localizedPricePerSqm =
+    addressReference.matched
+      ? addressReference.pricePerSqm
+      : zoneLocalizedPricePerSqm;
 
   const basePrice =
     localizedPricePerSqm * input.squareMeters;
@@ -182,10 +210,14 @@ export function calculateValuationV2(
   );
 
   const appliedCoefficients: AppliedCoefficient[] = [
-    {
-      label: "Ajuste local de zona",
-      value: localAdjustment,
-    },
+    ...(addressReference.matched
+      ? []
+      : [
+          {
+            label: "Ajuste local de zona",
+            value: localAdjustment,
+          },
+        ]),
     {
       label: "Tipo de inmueble",
       value: propertyTypeCoefficient,
@@ -228,5 +260,15 @@ export function calculateValuationV2(
     localizedPricePerSqm: Math.round(
       localizedPricePerSqm
     ),
+
+    pricingReference: {
+      source: addressReference.source,
+      pricePerSqm: localizedPricePerSqm,
+      addressMatched: addressReference.matched,
+      ...(addressReference.matched &&
+      addressReference.referenceId
+        ? { referenceId: addressReference.referenceId }
+        : {}),
+    },
   };
 }
