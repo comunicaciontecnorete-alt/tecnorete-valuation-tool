@@ -35,7 +35,7 @@ export function MarketReferenceSection() {
         </h2>
 
         <p className="mt-5 text-base leading-7 text-slate-600">
-          Estos datos proceden del informe general de mercado de Toledo
+          Estos datos generales proceden del informe de mercado de Toledo
           utilizado como referencia por nuestra herramienta. No representan
           precios específicos de esta zona o municipio. La estimación de cada
           vivienda aplica además criterios de localización y las

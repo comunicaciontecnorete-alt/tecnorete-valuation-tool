@@ -56,7 +56,7 @@ export const siteConfig = {
   },
   legal: {
     shortNotice:
-      "Antes de mostrarte la estimación orientativa de tu vivienda, necesitamos tus datos de contacto para poder enviarte el resultado y, si lo solicitas, contactar contigo para ampliar la valoración.",
+      "Introduce tus datos para ver inmediatamente la estimación orientativa de tu vivienda. Si lo necesitas, nuestro equipo podrá contactar contigo para ampliar la información.",
     checkboxText:
       "He leído y acepto la política de privacidad y consiento que Tecnorete Toledo trate mis datos para mostrarme una estimación orientativa de mi vivienda y contactar conmigo en relación con esta solicitud.",
     priorityCheckboxText:

@@ -85,9 +85,9 @@ export default function GeneralValuationPage() {
 
           <MotionStaggerItem>
             <p className="mt-4 max-w-3xl text-sm leading-6 text-white/65">
-              Nuestra herramienta combina referencias de mercado con la
-              localización y las principales características del inmueble
-              para calcular un rango estimado.
+              Nuestra herramienta combina referencias reales y recientes de
+              compraventas, datos de mercado y las características concretas
+              de la vivienda para calcular un rango estimado.
             </p>
           </MotionStaggerItem>
         </MotionStaggerGroup>

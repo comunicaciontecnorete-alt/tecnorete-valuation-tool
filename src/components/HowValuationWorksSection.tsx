@@ -3,7 +3,7 @@ export function HowValuationWorksSection() {
     {
       number: "01",
       title: "Partimos de la ubicación",
-      text: "La zona seleccionada establece el contexto inicial de la valoración. Cada localización se analiza con criterios específicos para evitar aplicar exactamente la misma referencia a todas las viviendas.",
+      text: "La zona seleccionada establece el contexto inicial de la valoración. Cada localización se analiza con criterios específicos y, cuando disponemos de ellas, utilizamos referencias locales diferenciadas.",
     },
     {
       number: "02",
@@ -13,7 +13,7 @@ export function HowValuationWorksSection() {
     {
       number: "03",
       title: "Contrastamos con el mercado",
-      text: "La estimación utiliza referencias procedentes del informe de mercado disponible y las adapta según el tipo de vivienda. Los pisos y las casas se valoran mediante criterios diferentes.",
+      text: "La estimación utiliza referencias reales y recientes de compraventas y datos generales del informe de mercado de Toledo. Estos datos generales no se presentan como el precio específico de una zona, y los pisos y las casas se valoran mediante criterios diferentes.",
     },
     {
       number: "04",
@@ -34,10 +34,11 @@ export function HowValuationWorksSection() {
         </h2>
 
         <p className="mt-5 text-base leading-7 text-slate-600">
-          La calculadora combina información de mercado con las
+          La calculadora combina datos de mercado y referencias reales y
+          recientes de compraventas con la localización, la tipología y las
           características concretas de cada inmueble. El objetivo no es
           sustituir una valoración profesional, sino ofrecer una primera
-          referencia coherente antes de tomar una decisión sobre una posible
+          estimación orientativa antes de tomar una decisión sobre una posible
           venta.
         </p>
       </div>

@@ -976,12 +976,14 @@ export function ValuationForm({
             <p className="mt-4 text-sm leading-6 opacity-85">
               Esta cifra es una
               referencia inicial. Para
-              ajustar el valor real es
-              necesario revisar la
+              afinar la estimación
+              conviene revisar la
               vivienda, su ubicación
-              exacta, estado, demanda y
-              comparables reales de
-              mercado.
+              exacta, su estado y las
+              referencias reales y
+              recientes de compraventas
+              disponibles, junto con
+              otros datos de mercado.
             </p>
           </div>
 
@@ -1029,14 +1031,13 @@ export function ValuationForm({
 
               <p className="mt-4 text-xs leading-5 text-slate-500">
                 Según los datos de
-                demanda del informe de
-                mercado utilizado para
+                demanda del informe
+                general de mercado de
+                Toledo utilizado para
                 esta estimación. Es un
-                indicador orientativo del
-                interés registrado en
-                viviendas de
-                características y rango
-                de precio similares.
+                indicador orientativo y
+                no representa la demanda
+                específica de esta zona.
               </p>
             </div>
           )}

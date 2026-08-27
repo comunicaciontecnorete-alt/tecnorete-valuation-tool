@@ -45,7 +45,7 @@ export const zoneSeoContent: Record<string, ZoneSeoContent> = {
       "Calcula cuánto puede valer tu vivienda en Santa María de Benquerencia con una estimación basada en sus características y la zona.",
 
     intro:
-      "El valor de una vivienda en Santa María de Benquerencia puede variar considerablemente según el tipo de inmueble, su superficie, su estado y las características del edificio. Nuestra calculadora permite obtener una primera estimación introduciendo los datos principales de la vivienda.",
+      "El valor de una vivienda en Santa María de Benquerencia puede variar considerablemente según el tipo de inmueble, su superficie, su estado y las características del edificio. Nuestra calculadora permite obtener una primera estimación orientativa introduciendo los datos principales de la vivienda.",
 
     marketContext:
       "Santa María de Benquerencia dispone de un parque inmobiliario amplio y diverso. Dentro de una misma zona pueden encontrarse viviendas de distintas épocas, tamaños y estados de conservación, por lo que utilizar únicamente una media general puede ofrecer resultados demasiado imprecisos.",
