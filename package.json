@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:lead": "tsx --test src/lib/leadApi.test.ts",
     "test:address-references": "tsx --test src/lib/addressMarketReferences.test.ts",
     "import:market": "node scripts/import-market-report.mjs"
   },

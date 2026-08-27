@@ -14,7 +14,7 @@ import type {
   ValuationInput,
 } from "@/types/valuation";
 
-import type { HybridValuationResult } from "@/lib/calculateValuationHybrid";
+import type { PublicValuationResult } from "@/lib/leadApi";
 
 type ValuationFormProps = {
   initialZoneSlug: string;
@@ -161,7 +161,7 @@ export function ValuationForm({
     useState<ContactData>(initialContactData);
 
   const [result, setResult] =
-    useState<HybridValuationResult | null>(null);
+    useState<PublicValuationResult | null>(null);
 
   const [isSubmitting, setIsSubmitting] =
     useState(false);

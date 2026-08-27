@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
 import { calculateValuationHybrid } from "@/lib/calculateValuationHybrid";
+import {
+  hasStrictConsent,
+  isPropertyType,
+  isPropertyTypeAllowed,
+  toPublicValuationResult,
+} from "@/lib/leadApi";
 import type { ValuationInput } from "@/types/valuation";
 import { siteConfig } from "@/config/site";
 import { getZoneBySlug } from "@/config/zones";
@@ -193,6 +199,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!isPropertyType(submittedValuation.propertyType)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El tipo de inmueble indicado no es válido.",
+        },
+        { status: 400 }
+      );
+    }
+
     const normalizedValuation: ValuationInput = {
       ...submittedValuation,
       street,
@@ -226,9 +242,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (
-      zone.allowedPropertyTypes &&
-      !zone.allowedPropertyTypes.includes(
-        normalizedValuation.propertyType
+      !isPropertyTypeAllowed(
+        normalizedValuation.propertyType,
+        zone.allowedPropertyTypes
       )
     ) {
       return NextResponse.json(
@@ -271,7 +287,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!contact.consent) {
+    if (!hasStrictConsent(contact.consent)) {
       return NextResponse.json(
         {
           ok: false,
@@ -743,11 +759,13 @@ const [
       );
     }
 
+    const publicResult = toPublicValuationResult(result);
+
     return NextResponse.json({
       ok: true,
       message:
         "Lead recibido y email enviado correctamente.",
-      result,
+      result: publicResult,
     });
   } catch (error) {
     console.error(
