@@ -387,6 +387,7 @@ export function ValuationForm({
 
                   <input
                     id="valuation-street"
+                    data-clarity-mask="true"
                     type="text"
                     required
                     maxLength={120}
@@ -413,6 +414,7 @@ export function ValuationForm({
 
                   <input
                     id="valuation-street-number"
+                    data-clarity-mask="true"
                     type="text"
                     required
                     maxLength={20}
@@ -864,6 +866,7 @@ export function ValuationForm({
               </label>
 
               <input
+                data-clarity-mask="true"
                 type="text"
                 value={
                   contactData.name
@@ -885,6 +888,7 @@ export function ValuationForm({
               </label>
 
               <input
+                data-clarity-mask="true"
                 type="tel"
                 value={
                   contactData.phone
@@ -906,6 +910,7 @@ export function ValuationForm({
               </label>
 
               <input
+                data-clarity-mask="true"
                 type="email"
                 value={
                   contactData.email
@@ -994,7 +999,10 @@ export function ValuationForm({
           </h2>
 
           <div className="mt-6 rounded-3xl bg-[#033b79] p-6 text-white">
-            <p className="text-sm font-semibold">
+            <p
+              className="text-sm font-semibold"
+              data-clarity-mask="true"
+            >
               {formData.street},{" "}
               {formData.streetNumber}
             </p>

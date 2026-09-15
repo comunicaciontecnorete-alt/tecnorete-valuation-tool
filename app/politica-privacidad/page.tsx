@@ -155,10 +155,11 @@ export default function PrivacyPolicyPage() {
             </h2>
 
             <p className="mt-2">
-              Google Analytics 4 solo se carga si aceptas expresamente las
-              cookies de analítica. No enviamos a Google los datos personales
-              introducidos en el formulario. Puedes consultar los detalles y
-              retirar tu elección en la{" "}
+              Google Analytics 4 y Microsoft Clarity solo se cargan si aceptas
+              expresamente las cookies de analítica. No enviamos a Google los
+              datos personales introducidos en el formulario y los campos
+              sensibles quedan enmascarados frente a las grabaciones de
+              Clarity. Puedes consultar los detalles y retirar tu elección en la{" "}
               <Link
                 className="font-semibold text-[#033b79] underline"
                 href="/politica-cookies"

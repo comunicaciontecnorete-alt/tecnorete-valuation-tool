@@ -1,6 +1,7 @@
 "use client";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Clarity from "@microsoft/clarity";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -11,6 +12,7 @@ import {
 } from "@/lib/analytics";
 
 const GA_MEASUREMENT_ID = "G-K54SHW8NE9";
+const CLARITY_PROJECT_ID = "yiryi2h781";
 const CONSENT_MAX_AGE = 60 * 60 * 24 * 180;
 
 export const OPEN_COOKIE_SETTINGS_EVENT = "tecnorete:open-cookie-settings";
@@ -49,11 +51,26 @@ function queueGooglePrivacySettings() {
   });
 }
 
-function deleteGoogleAnalyticsCookies() {
+function initializeAnalyticsServices() {
+  queueGooglePrivacySettings();
+  Clarity.init(CLARITY_PROJECT_ID);
+  Clarity.consentV2({
+    ad_Storage: "denied",
+    analytics_Storage: "granted",
+  });
+}
+
+function deleteAnalyticsCookies() {
   const analyticsCookies = document.cookie
     .split("; ")
     .map((entry) => entry.split("=")[0])
-    .filter((name) => name === "_ga" || name.startsWith("_ga_"));
+    .filter(
+      (name) =>
+        name === "_ga" ||
+        name.startsWith("_ga_") ||
+        name === "_clck" ||
+        name === "_clsk"
+    );
 
   const hostnameParts = window.location.hostname.split(".");
   const domains = hostnameParts
@@ -82,7 +99,7 @@ export function AnalyticsConsentManager() {
       const storedConsent = readAnalyticsConsent();
 
       if (storedConsent === "granted") {
-        queueGooglePrivacySettings();
+        initializeAnalyticsServices();
       }
 
       setConsent(storedConsent);
@@ -96,7 +113,7 @@ export function AnalyticsConsentManager() {
   }, []);
 
   function grantAnalyticsConsent() {
-    queueGooglePrivacySettings();
+    initializeAnalyticsServices();
     writeConsentCookie("granted");
     setConsent("granted");
     setSettingsAreOpen(false);
@@ -111,8 +128,14 @@ export function AnalyticsConsentManager() {
       ad_user_data: "denied",
       ad_personalization: "denied",
     });
+    if (analyticsWasActive) {
+      Clarity.consentV2({
+        ad_Storage: "denied",
+        analytics_Storage: "denied",
+      });
+    }
     writeConsentCookie("denied");
-    deleteGoogleAnalyticsCookies();
+    deleteAnalyticsCookies();
     setConsent("denied");
     setSettingsAreOpen(false);
 
@@ -143,10 +166,10 @@ export function AnalyticsConsentManager() {
             Cookies de analítica
           </h2>
           <p className="mt-2 text-sm leading-6 text-ink-muted">
-            Usamos Google Analytics 4 para conocer el uso agregado de la web.
-            Solo se cargará después de que aceptes. No enviamos a Google los
-            datos que escribes en el formulario, como email, teléfono o
-            dirección.
+            Usamos Google Analytics 4 y Microsoft Clarity para conocer el uso
+            agregado de la web. Solo se cargarán después de que aceptes. Los
+            datos personales del formulario, como email, teléfono o dirección,
+            no se envían a GA4 y quedan enmascarados en Clarity.
           </p>
           <p className="mt-2 text-xs leading-5 text-ink-muted">
             Puedes cambiar tu elección cuando quieras. Consulta la{" "}

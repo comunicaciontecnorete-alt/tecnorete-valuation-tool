@@ -39,6 +39,12 @@ export default function CookiePolicyPage() {
               usuarios de forma seudónima. Estas cookies pueden conservarse
               hasta dos años.
             </p>
+            <p className="mt-2">
+              También cargamos Microsoft Clarity para generar mapas de calor y
+              grabaciones de sesión con los datos sensibles enmascarados.
+              Clarity puede utilizar cookies como <code>_clck</code> y{" "}
+              <code>_clsk</code> para relacionar páginas y sesiones.
+            </p>
           </section>
 
           <section>
@@ -50,8 +56,10 @@ export default function CookiePolicyPage() {
               se navega por la web y analizar el embudo de valoración mediante
               la zona y el tipo de inmueble. No enviamos a Google datos
               personales como nombre, email, teléfono, calle, número del
-              inmueble o dirección completa. También mantenemos desactivadas
-              las señales y la personalización publicitarias.
+              inmueble o dirección completa. Estos campos y la dirección
+              mostrada en el resultado se enmascaran expresamente frente a las
+              grabaciones de Clarity. También mantenemos desactivadas las
+              señales y la personalización publicitarias.
             </p>
           </section>
 
@@ -60,9 +68,10 @@ export default function CookiePolicyPage() {
               Consentimiento y retirada
             </h2>
             <p className="mt-2">
-              Google Analytics no se descarga ni envía datos antes de que
-              aceptes las cookies de analítica. Rechazarlas no limita el uso de
-              la calculadora.
+              Google Analytics y Microsoft Clarity no se descargan antes de que
+              aceptes las cookies de analítica. Al retirar el consentimiento se
+              eliminan sus cookies analíticas y dejan de cargarse. Rechazarlas
+              no limita el uso de la calculadora.
             </p>
             <div className="mt-4 inline-flex rounded-xl border border-[#033b79] px-4 py-2 font-semibold text-[#033b79]">
               <CookieSettingsButton />
