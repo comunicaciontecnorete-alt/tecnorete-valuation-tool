@@ -4,13 +4,16 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import {
+  ANALYTICS_CONSENT_COOKIE,
+  readAnalyticsConsent,
+  type AnalyticsConsent,
+} from "@/lib/analytics";
+
 const GA_MEASUREMENT_ID = "G-K54SHW8NE9";
-const CONSENT_COOKIE = "tecnorete_analytics_consent";
 const CONSENT_MAX_AGE = 60 * 60 * 24 * 180;
 
 export const OPEN_COOKIE_SETTINGS_EVENT = "tecnorete:open-cookie-settings";
-
-type AnalyticsConsent = "granted" | "denied";
 
 declare global {
   interface Window {
@@ -18,19 +21,10 @@ declare global {
   }
 }
 
-function readConsentCookie(): AnalyticsConsent | null {
-  const consent = document.cookie
-    .split("; ")
-    .find((entry) => entry.startsWith(`${CONSENT_COOKIE}=`))
-    ?.split("=")[1];
-
-  return consent === "granted" || consent === "denied" ? consent : null;
-}
-
 function writeConsentCookie(consent: AnalyticsConsent) {
   const secure = window.location.protocol === "https:" ? "; Secure" : "";
 
-  document.cookie = `${CONSENT_COOKIE}=${consent}; Max-Age=${CONSENT_MAX_AGE}; Path=/; SameSite=Lax${secure}`;
+  document.cookie = `${ANALYTICS_CONSENT_COOKIE}=${consent}; Max-Age=${CONSENT_MAX_AGE}; Path=/; SameSite=Lax${secure}`;
 }
 
 function queueGooglePrivacySettings() {
@@ -85,7 +79,7 @@ export function AnalyticsConsentManager() {
     window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, openSettings);
 
     const preferenceTimer = window.setTimeout(() => {
-      const storedConsent = readConsentCookie();
+      const storedConsent = readAnalyticsConsent();
 
       if (storedConsent === "granted") {
         queueGooglePrivacySettings();

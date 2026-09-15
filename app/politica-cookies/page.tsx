@@ -47,10 +47,11 @@ export default function CookiePolicyPage() {
             </h2>
             <p className="mt-2">
               La analítica nos ayuda a entender qué páginas se visitan y cómo
-              se navega por la web. No enviamos a Google los valores introducidos
-              en la calculadora ni datos personales como nombre, email,
-              teléfono, calle o número del inmueble. También mantenemos
-              desactivadas las señales y la personalización publicitarias.
+              se navega por la web y analizar el embudo de valoración mediante
+              la zona y el tipo de inmueble. No enviamos a Google datos
+              personales como nombre, email, teléfono, calle, número del
+              inmueble o dirección completa. También mantenemos desactivadas
+              las señales y la personalización publicitarias.
             </p>
           </section>
 
@@ -88,4 +89,3 @@ export default function CookiePolicyPage() {
     </main>
   );
 }
-

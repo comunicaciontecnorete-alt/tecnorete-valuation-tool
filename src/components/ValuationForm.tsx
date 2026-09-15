@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
@@ -15,6 +15,7 @@ import type {
 } from "@/types/valuation";
 
 import type { PublicValuationResult } from "@/lib/leadApi";
+import { trackValuationEvent } from "@/lib/analytics";
 
 type ValuationFormProps = {
   initialZoneSlug: string;
@@ -168,6 +169,10 @@ export function ValuationForm({
 
   const [error, setError] = useState("");
 
+  const valuationStartTrackedRef = useRef(false);
+  const resultViewTrackedRef = useRef(false);
+  const submissionInFlightRef = useRef(false);
+
   const totalSteps = 5;
   const progress = Math.round(
     (step / totalSteps) * 100
@@ -177,6 +182,18 @@ export function ValuationForm({
     formData.propertyType === "piso" ||
     formData.propertyType === "atico" ||
     formData.propertyType === "duplex";
+
+  useEffect(() => {
+    if (step !== 5 || !result || resultViewTrackedRef.current) {
+      return;
+    }
+
+    resultViewTrackedRef.current = true;
+    trackValuationEvent("valuation_result_view", {
+      zone: formData.zoneSlug,
+      property_type: formData.propertyType,
+    });
+  }, [formData.propertyType, formData.zoneSlug, result, step]);
 
   async function goNext() {
     setError("");
@@ -227,6 +244,16 @@ export function ValuationForm({
         return;
       }
 
+      if (submissionInFlightRef.current) {
+        return;
+      }
+
+      submissionInFlightRef.current = true;
+      trackValuationEvent("lead_submit", {
+        zone: formData.zoneSlug,
+        property_type: formData.propertyType,
+      });
+
       try {
         setIsSubmitting(true);
 
@@ -267,6 +294,11 @@ export function ValuationForm({
           );
         }
 
+        trackValuationEvent("lead_success", {
+          zone: normalizedFormData.zoneSlug,
+          property_type: normalizedFormData.propertyType,
+        });
+
         setResult(data.result);
         setStep(5);
       } catch (submitError) {
@@ -276,10 +308,19 @@ export function ValuationForm({
             : "No se ha podido calcular la valoración."
         );
       } finally {
+        submissionInFlightRef.current = false;
         setIsSubmitting(false);
       }
 
       return;
+    }
+
+    if (step === 1 && !valuationStartTrackedRef.current) {
+      valuationStartTrackedRef.current = true;
+      trackValuationEvent("valuation_start", {
+        zone: formData.zoneSlug,
+        property_type: formData.propertyType,
+      });
     }
 
     setStep((currentStep) =>
@@ -1104,6 +1145,9 @@ export function ValuationForm({
     <button
       type="button"
       onClick={() => {
+        valuationStartTrackedRef.current = false;
+        resultViewTrackedRef.current = false;
+        submissionInFlightRef.current = false;
         setStep(1);
         setResult(null);
         setError("");
