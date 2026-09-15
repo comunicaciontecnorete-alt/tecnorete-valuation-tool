@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { SocialLinks } from "@/components/SocialLinks";
+import { CookieSettingsButton } from "@/components/CookieSettingsButton";
 
 function formatPhoneForDisplay(phone: string) {
   const digits = phone.replace(/\D/g, "");
@@ -32,6 +33,12 @@ export function SiteFooter() {
             <Link href={siteConfig.privacyPath} className="hover:underline">
               Política de privacidad
             </Link>
+
+            <Link href="/politica-cookies" className="hover:underline">
+              Política de cookies
+            </Link>
+
+            <CookieSettingsButton />
 
             <SocialLinks className="mt-3 flex w-full flex-wrap justify-start md:w-auto md:justify-end" />
           </div>

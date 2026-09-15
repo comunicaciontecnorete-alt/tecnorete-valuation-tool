@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { siteConfig } from "@/config/site";
 
 export default function PrivacyPolicyPage() {
@@ -13,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </h1>
 
         <p className="mt-4 text-sm text-slate-500">
-          Última actualización: 1 de agosto de 2026
+          Última actualización: 15 de septiembre de 2026
         </p>
 
         <div className="mt-8 space-y-7 text-sm leading-7 text-slate-700">
@@ -144,6 +146,26 @@ export default function PrivacyPolicyPage() {
               gestión técnica implique tratamiento fuera del Espacio Económico
               Europeo. En ese caso, se aplicarán las garantías legalmente
               exigibles.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-[#033b79]">
+              Analítica y cookies
+            </h2>
+
+            <p className="mt-2">
+              Google Analytics 4 solo se carga si aceptas expresamente las
+              cookies de analítica. No enviamos a Google los datos personales
+              introducidos en el formulario. Puedes consultar los detalles y
+              retirar tu elección en la{" "}
+              <Link
+                className="font-semibold text-[#033b79] underline"
+                href="/politica-cookies"
+              >
+                política de cookies
+              </Link>
+              .
             </p>
           </section>
 

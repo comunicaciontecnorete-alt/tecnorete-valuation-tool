@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { getSiteUrl } from "@/config/seo";
 import { StructuredData } from "@/components/StructuredData";
+import { AnalyticsConsentManager } from "@/components/AnalyticsConsent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -80,6 +81,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <StructuredData />
         {children}
+        <AnalyticsConsentManager />
       </body>
     </html>
   );

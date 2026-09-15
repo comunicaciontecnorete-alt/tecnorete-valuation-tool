@@ -22,7 +22,7 @@ export const zoneMarketAdjustments: Record<
   ZoneMarketAdjustment
 > = {
   "santa-maria-de-benquerencia": {
-    apartment: 1350 / APARTMENT_REFERENCE,
+    apartment: 2000 / CURRENT_APARTMENT_MARKET_BASE,
     house: 1350 / HOUSE_REFERENCE,
   },
 
