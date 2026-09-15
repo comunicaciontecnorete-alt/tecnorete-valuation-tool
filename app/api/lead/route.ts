@@ -11,6 +11,10 @@ import {
 import type { ValuationInput } from "@/types/valuation";
 import { siteConfig } from "@/config/site";
 import { getZoneBySlug } from "@/config/zones";
+import {
+  sanitizeMarketingAttribution,
+  type MarketingAttribution,
+} from "@/lib/marketingAttribution";
 
 type LeadContactData = {
   name: string;
@@ -23,6 +27,7 @@ type LeadContactData = {
 type LeadRequestBody = {
   valuation: ValuationInput;
   contact: LeadContactData;
+  attribution?: MarketingAttribution;
   sourceUrl?: string;
 };
 
@@ -127,8 +132,13 @@ export async function POST(request: NextRequest) {
     const {
       contact,
       valuation: submittedValuation,
+      attribution: submittedAttribution,
       sourceUrl,
     } = body;
+
+    const attribution = sanitizeMarketingAttribution(
+      submittedAttribution
+    );
 
     if (typeof submittedValuation.street !== "string") {
       return NextResponse.json(
@@ -317,6 +327,7 @@ export async function POST(request: NextRequest) {
       contact,
       property: normalizedValuation,
       valuationResult: result,
+      attribution,
     };
 const isHouse =
   normalizedValuation.propertyType === "casa" ||
@@ -404,6 +415,8 @@ const sheetsLead = {
   ...demandData,
 
   sourceUrl: sourceUrl ?? "",
+
+  ...attribution,
 
   consent: yesNo(
     contact.consent

@@ -16,6 +16,7 @@ import type {
 
 import type { PublicValuationResult } from "@/lib/leadApi";
 import { trackValuationEvent } from "@/lib/analytics";
+import { getMarketingAttribution } from "@/lib/marketingAttribution";
 
 type ValuationFormProps = {
   initialZoneSlug: string;
@@ -277,6 +278,7 @@ export function ValuationForm({
             body: JSON.stringify({
               valuation: normalizedFormData,
               contact: contactData,
+              attribution: getMarketingAttribution(),
               sourceUrl:
                 typeof window !== "undefined"
                   ? window.location.href

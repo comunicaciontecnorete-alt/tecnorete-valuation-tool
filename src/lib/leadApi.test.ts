@@ -9,6 +9,7 @@ import {
   PROPERTY_TYPES,
   toPublicValuationResult,
 } from "@/lib/leadApi";
+import { sanitizeMarketingAttribution } from "@/lib/marketingAttribution";
 
 test("rechaza un propertyType arbitrario", () => {
   assert.equal(isPropertyType("local-comercial"), false);
@@ -47,6 +48,38 @@ test("solo acepta el booleano true como consentimiento", () => {
   ]) {
     assert.equal(hasStrictConsent(invalidConsent), false);
   }
+});
+
+test("sanea la atribución con una allowlist y elimina query de las URLs", () => {
+  assert.deepEqual(
+    sanitizeMarketingAttribution({
+      utm_source: " google ",
+      utm_medium: "cpc",
+      utm_campaign: "toledo-2026",
+      landing_page:
+        "https://example.com/valora-tu-vivienda?email=privado@example.com#paso",
+      referrer: "https://buscador.example/resultados?q=dato-privado",
+      email: "no-debe-pasar@example.com",
+      street: "Calle que no debe pasar",
+    }),
+    {
+      utm_source: "google",
+      utm_medium: "cpc",
+      utm_campaign: "toledo-2026",
+      landing_page: "https://example.com/valora-tu-vivienda",
+      referrer: "https://buscador.example",
+    }
+  );
+});
+
+test("no inventa UTMs ausentes ni acepta URLs no web", () => {
+  assert.deepEqual(
+    sanitizeMarketingAttribution({
+      landing_page: "javascript:alert(1)",
+      referrer: "",
+    }),
+    {}
+  );
 });
 
 test("serializa por allowlist únicamente los datos que consume la UI", () => {

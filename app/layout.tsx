@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import { getSiteUrl } from "@/config/seo";
 import { StructuredData } from "@/components/StructuredData";
 import { AnalyticsConsentManager } from "@/components/AnalyticsConsent";
+import { MarketingAttributionCapture } from "@/components/MarketingAttributionCapture";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -79,6 +80,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <MarketingAttributionCapture />
         <StructuredData />
         {children}
         <AnalyticsConsentManager />
