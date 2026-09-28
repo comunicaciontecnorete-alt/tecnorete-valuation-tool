@@ -46,3 +46,7 @@ export function trackValuationEvent(
   });
 }
 
+export function trackZoneSelected(zone: string) {
+  if (readAnalyticsConsent() !== "granted") return;
+  sendGAEvent("event", "zone_selected", { zone });
+}

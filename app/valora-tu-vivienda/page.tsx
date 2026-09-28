@@ -3,8 +3,10 @@ import Link from "next/link";
 import {
   getChildZones,
   getTopLevelZones,
+  zones,
 } from "@/config/zones";
 import { siteConfig } from "@/config/site";
+import { ZoneValuationEntry } from "@/components/ZoneValuationEntry";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MotionReveal } from "@/components/motion/MotionReveal";
@@ -62,35 +64,29 @@ export default function GeneralValuationPage() {
       <SiteHeader />
 
       <main className="min-h-screen bg-[#f6f8fb]">
-      <section className="bg-[#033b79] px-5 py-16 text-white md:px-8 md:py-24">
-        <MotionStaggerGroup className="mx-auto max-w-6xl">
-          <MotionStaggerItem>
-            <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
-              {siteConfig.name}
-            </p>
-          </MotionStaggerItem>
-
-          <MotionStaggerItem>
-            <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
-              ¿Cuánto vale tu vivienda?
+      <section className="bg-brand-blue px-5 py-6 text-white md:px-8 md:py-12">
+        <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
+          <div>
+            <h1 className="max-w-2xl text-3xl font-bold tracking-tight max-[360px]:text-2xl md:text-5xl">
+              Descubre cuánto vale tu vivienda en Toledo
             </h1>
-          </MotionStaggerItem>
-
-          <MotionStaggerItem>
-            <p className="mt-6 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
-              Selecciona la zona en la que se encuentra tu vivienda y obtén
-              una primera estimación orientativa de su valor en pocos pasos.
+            <p className="mt-3 max-w-xl text-base leading-6 text-white/85 md:mt-5 md:text-lg">
+              Obtén una valoración orientativa gratuita basada en datos del mercado de tu zona.
             </p>
-          </MotionStaggerItem>
-
-          <MotionStaggerItem>
-            <p className="mt-4 max-w-3xl text-sm leading-6 text-white/65">
-              Nuestra herramienta combina referencias reales y recientes de
-              compraventas, datos de mercado y las características concretas
-              de la vivienda para calcular un rango estimado.
-            </p>
-          </MotionStaggerItem>
-        </MotionStaggerGroup>
+          </div>
+          <ZoneValuationEntry zones={zones.filter((zone) => zone.valuationEnabled !== false).map((zone) => ({
+            slug: zone.slug,
+            name: zone.name,
+            group: zones.find((parent) => parent.slug === zone.parentZoneSlug)?.name,
+          }))} />
+        </div>
+      </section>
+      <section aria-label="Ventajas de la valoración" className="border-b border-border bg-white px-5 py-5 md:px-8">
+        <ul className="mx-auto flex max-w-6xl flex-col gap-2 text-sm text-brand-blue sm:flex-row sm:justify-between">
+          <li>✓ Adaptada a tu zona</li>
+          <li>✓ Referencias reales de mercado</li>
+          <li>✓ Estimación en pocos pasos</li>
+        </ul>
       </section>
 
       <section className="px-5 py-12 md:px-8 md:py-16">
@@ -231,6 +227,10 @@ export default function GeneralValuationPage() {
           trigger="viewport"
           className="mx-auto max-w-6xl rounded-3xl bg-white p-6 shadow-sm md:p-10"
         >
+          <div className="mb-8 max-w-3xl space-y-3 text-base leading-7 text-slate-600">
+            <p>Selecciona la zona en la que se encuentra tu vivienda y obtén una primera estimación orientativa de su valor en pocos pasos.</p>
+            <p>Nuestra herramienta combina referencias reales y recientes de compraventas, datos de mercado y las características concretas de la vivienda para calcular un rango estimado.</p>
+          </div>
           <div className="grid gap-8 lg:grid-cols-2">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-[#033b79] md:text-3xl">
@@ -271,6 +271,7 @@ export default function GeneralValuationPage() {
       </main>
 
       <SiteFooter />
+      <div aria-hidden="true" className="h-[calc(5rem+env(safe-area-inset-bottom))] md:hidden" />
     </>
   );
 }
