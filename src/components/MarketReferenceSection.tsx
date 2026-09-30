@@ -1,4 +1,9 @@
 import { getMarketData } from "@/lib/marketData";
+import {
+  getZoneMarketReferenceData,
+  type ZoneMarketReferenceBreakdown,
+  type ZoneMarketReferenceData,
+} from "@/config/zoneMarketReferenceData";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("es-ES", {
@@ -12,7 +17,113 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat("es-ES").format(value);
 }
 
-export function MarketReferenceSection() {
+type MarketReferenceSectionProps = {
+  zoneSlug: string;
+};
+
+function LocalReferenceCard({
+  item,
+  houseReference = false,
+}: {
+  item: ZoneMarketReferenceBreakdown;
+  houseReference?: boolean;
+}) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+      <p className="text-sm font-semibold text-[#ec8a36]">{item.label}</p>
+      <p className="mt-3 text-2xl font-bold text-[#033b79]">
+        {formatNumber(item.pricePerSqm)} €/m²
+      </p>
+      <p className="mt-2 text-sm leading-5 text-slate-600">
+        {houseReference
+          ? "Referencia basada en 1 venta registrada"
+          : `${formatNumber(item.sales)} ${item.sales === 1 ? "venta registrada" : "ventas registradas"}`}
+      </p>
+    </article>
+  );
+}
+
+function BenquerenciaMarketReference({
+  data,
+}: {
+  data: ZoneMarketReferenceData;
+}) {
+  return (
+    <section className="rounded-3xl bg-white p-6 shadow-sm md:p-10">
+      <div className="max-w-4xl">
+        <p className="text-sm font-semibold uppercase tracking-wide text-[#ec8a36]">
+          Datos de referencia
+        </p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-[#033b79] md:text-3xl">
+          Referencias del mercado inmobiliario de {data.location}
+        </h2>
+        <p className="mt-5 text-base leading-7 text-slate-600">
+          Resumen de las compraventas registradas disponibles para esta zona,
+          desglosado por tipo y características de la vivienda.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-5 sm:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 p-5">
+          <p className="text-3xl font-bold text-[#033b79]">
+            {formatNumber(data.totalSales)}
+          </p>
+          <p className="mt-2 text-sm leading-5 text-slate-600">
+            ventas cerradas
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 p-5">
+          <p className="text-3xl font-bold text-[#033b79]">
+            {formatCurrency(data.averageSalePrice)}
+          </p>
+          <p className="mt-2 text-sm leading-5 text-slate-600">Precio medio</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 p-5">
+          <p className="text-3xl font-bold text-[#033b79]">
+            {formatNumber(data.averagePricePerSqm)} €/m²
+          </p>
+          <p className="mt-2 text-sm leading-5 text-slate-600">
+            Media general
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {data.propertyTypes.map((item) => (
+          <LocalReferenceCard
+            key={item.label}
+            item={item}
+            houseReference={item.label === "Casa/chalet"}
+          />
+        ))}
+        {data.apartmentFeatures.map((item) => (
+          <LocalReferenceCard key={item.label} item={item} />
+        ))}
+        {data.conditions.map((item) => (
+          <LocalReferenceCard key={item.label} item={item} />
+        ))}
+      </div>
+
+      <div className="mt-8 rounded-2xl bg-[#f6f8fb] p-5">
+        <p className="text-sm leading-6 text-slate-600">
+          <strong className="text-slate-800">Nota:</strong> El resumen
+          disponible no especifica el periodo analizado ni si las superficies
+          corresponden a metros útiles o construidos.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export function MarketReferenceSection({
+  zoneSlug,
+}: MarketReferenceSectionProps) {
+  const zoneMarketData = getZoneMarketReferenceData(zoneSlug);
+
+  if (zoneMarketData) {
+    return <BenquerenciaMarketReference data={zoneMarketData} />;
+  }
+
   const marketData = getMarketData();
 
   const {

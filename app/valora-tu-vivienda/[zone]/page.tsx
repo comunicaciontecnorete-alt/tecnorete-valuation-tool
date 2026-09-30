@@ -286,7 +286,7 @@ export default async function ZoneValuationPage({
           </MotionReveal>
 
           <MotionReveal trigger="viewport">
-            <MarketReferenceSection />
+            <MarketReferenceSection zoneSlug={zone.slug} />
           </MotionReveal>
 
           <MotionReveal trigger="viewport">
